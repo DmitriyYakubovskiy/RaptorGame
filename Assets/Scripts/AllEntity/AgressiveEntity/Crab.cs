@@ -1,6 +1,7 @@
 using Assets.Scripts.AllEntity;
 using Assets.Scripts.AllEntity.Traits;
 using UnityEngine;
+using System;
 
 public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgressiveLogics>, ITrait<CanAttackOneUnit>
 {
@@ -12,22 +13,29 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
 
     private void Start()
     {
+        SearchRaptor();
+
         System.Random rand = new System.Random();
 
         m_lives = 30;
-        m_speed = rand.Next(200, 300) / 100f;
-        m_jumpForce = 30;
-        m_radiusCheckGround = 0.5f;
+        m_speed = rand.Next(150, 250) / 100f;
+        m_jumpForce = 68;
+        m_jumpForceStart = m_jumpForce;
+        m_radiusCheckGround = 0.3f;
         m_rb.mass = 4;
 
-        m_sizeCheckingWall = new Vector2(0.4f, 0.2f);
+        m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator = GetComponentInChildren<Animator>();
-        m_startTimeBtwJump = 0.5f;
-        m_radiusCheck = 20;
+        m_startTimeBtwJump = 1.5f;
+        m_endCheckPlayer = 7;
+        m_beginCheckPlayer= 0.8f;
         IsJumped = false;
 
         m_damage = 7f;
         m_startTimeBtwAttack = 2f;
+
+        CounterEntity.AddAgressiveEntity();
+        CounterEntity.AddEntity();
     }
 
     private void Update()
@@ -38,7 +46,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         }
         RechargeTimeAttack();
         CheckGround();
-        SetMoveVector(this.AgressiveLogics(this), 0);
+        this.AgressiveLogics(this);
         this.Move(this);
         ExitFromTheCard();
     }
@@ -57,7 +65,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         }
         else
         {
-            if (GetSpeedReal() > 0+0.0001|| GetSpeedReal() < 0 - 0.0001)
+            if (Math.Abs(m_moveVector.x) >= 0.1)
             {
                 State = States.Run;
             }
@@ -66,6 +74,11 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
                 State = States.Idle;
             }
         }
-        SpeedCalculation();
+    }
+
+    private void OnDestroy()
+    {
+        CounterEntity.DeleteAgressiveEntity();
+        CounterEntity.DeleteEntity();
     }
 }

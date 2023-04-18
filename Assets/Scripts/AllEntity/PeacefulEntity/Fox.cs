@@ -1,6 +1,7 @@
 using Assets.Scripts.AllEntity;
 using Assets.Scripts.AllEntity.Traits;
 using UnityEngine;
+using System;
 
 public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLogics>
 {
@@ -12,25 +13,31 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
 
     private void Start()
     {
+        SearchRaptor();
+
         System.Random rand = new System.Random();
 
         m_lives = 20;
         m_speed = rand.Next(400, 600) / 100f;
-        m_jumpForce = 20;
-        m_radiusCheckGround=0.5f;
-        m_rb.mass = 1;
+        m_jumpForce = 36;
+        m_jumpForceStart = m_jumpForce;
+        m_radiusCheckGround =0.3f;
+        m_rb.mass = 2;
 
-        m_sizeCheckingWall = new Vector2(0.3f, 0.09f);
+        m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator=GetComponentInChildren<Animator>();
-        m_startTimeBtwJump = 0.5f;
-        m_radiusCheck = 10;
+        m_startTimeBtwJump = 1f;
+        m_endCheckPlayer = 7;
+        m_beginCheckPlayer = 0f;
         IsJumped = false;
+
+        CounterEntity.AddEntity();
     }
 
     private void Update()
     {
         CheckGround();
-        SetMoveVector(this.PeacefulLogics(this),0);
+        this.PeacefulLogics(this);
         this.Move(this);
         ExitFromTheCard();
     }
@@ -49,7 +56,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         }
         else
         {
-            if (GetSpeedReal() > 0 + 0.0001 || GetSpeedReal() < 0 - 0.0001)
+            if (Math.Abs(m_moveVector.x) >= 0.11)
             {
                 State = States.Run;
             }
@@ -58,6 +65,10 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
                 State = States.Idle;
             }
         }
-        SpeedCalculation();
+    }
+
+    private void OnDestroy()
+    {
+        CounterEntity.DeleteEntity();
     }
 }

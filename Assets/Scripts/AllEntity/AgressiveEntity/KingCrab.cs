@@ -3,7 +3,7 @@ using UnityEngine;
 using System;
 using Assets.Scripts.AllEntity.Traits;
 
-public class KingCrab : AIEntity, ITrait<CanClimb>,ITrait<CanMove>,ITrait<CanAgressiveLogics>,ITrait<CanAttackSplash>
+public class KingCrab : AIEntity, ITrait<CanClimb>, ITrait<CanMove>, ITrait<CanAgressiveLogics>, ITrait<CanAttackSplash>
 {
 
     private States State
@@ -12,42 +12,41 @@ public class KingCrab : AIEntity, ITrait<CanClimb>,ITrait<CanMove>,ITrait<CanAgr
         set { GetAnimator().SetInteger("KingCrabState", (int)value); }
     }
 
-    public void Logica()
-    {
-        Vector2 distance = new(Math.Abs(Raptor.GetInstance().GetRb().position.x - GetRb().position.x), Math.Abs(Raptor.GetInstance().GetRb().position.y - GetRb().position.y));
+    //public void Logica()
+    //{
+    //    Vector2 distance = new(Math.Abs(Raptor.GetInstance().GetRb().position.x - GetRb().position.x), Math.Abs(Raptor.GetInstance().GetRb().position.y - GetRb().position.y));
 
-        if (ÑheckTheWall())
-        {
-            if (IsGrounded)
-            {
-                IsJumped = true;
-            }
-        }
+    //    if (ÑheckTheWall())
+    //    {
+    //        if (IsGrounded)
+    //        {
+    //            IsJumped = true;
+    //        }
+    //    }
 
-        if (distance.x < 100 && distance.x >= m_attackRange)
-        {
-            SetMoveVector(new Vector2(Math.Abs(Raptor.GetInstance().GetRb().position.x - GetRb().position.x) / (Raptor.GetInstance().GetRb().position.x - GetRb().position.x), 0));
-        }
-        else if (distance.x <= m_attackRange)
-        {
-            SetMoveVector(0, 0);
-        }
-        else
-        {
-            if (m_timePatrul <= 0)
-            {
-                System.Random rand = new System.Random();
-                m_timePatrul = rand.Next(1, 4);
-                m_moveVectorPatrul = rand.Next(-1, 2);
-            }
-            else
-            {
-                m_timePatrul -= Time.deltaTime;
-                SetMoveVector(m_moveVectorPatrul, 0);
-            }
-        }
-        this.Move(this);
-    }
+    //    if (distance.x < 100 && distance.x >= m_attackRange)
+    //    {
+    //        SetMoveVector(new Vector2(Math.Abs(Raptor.GetInstance().GetRb().position.x - GetRb().position.x) / (Raptor.GetInstance().GetRb().position.x - GetRb().position.x), 0));
+    //    }
+    //    else if (distance.x <= m_attackRange)
+    //    {
+    //        SetMoveVector(0, 0);
+    //    }
+    //    else
+    //    {
+    //        if (m_timePatrul <= 0)
+    //        {
+    //            System.Random rand = new System.Random();
+    //            m_timePatrul = rand.Next(1, 4);
+    //            m_moveVector.x = rand.Next(-1, 2);
+    //        }
+    //        else
+    //        {
+    //            m_timePatrul -= Time.deltaTime;
+    //        }
+    //    }
+    //    this.Move(this);
+    //}
 
 
 
@@ -63,7 +62,7 @@ public class KingCrab : AIEntity, ITrait<CanClimb>,ITrait<CanMove>,ITrait<CanAgr
 
         m_sizeCheckingWall = new Vector2(2.0f, 0.5f);
         m_animator = GetComponentInChildren<Animator>();
-        m_radiusCheck = 50;
+        //m_radiusCheckPlayer = 5;
         m_startTimeBtwJump = 0.5f;
         IsJumped = false;
 
@@ -78,8 +77,8 @@ public class KingCrab : AIEntity, ITrait<CanClimb>,ITrait<CanMove>,ITrait<CanAgr
             this.AttackSplash(this);
         }
         RechargeTimeAttack();
-        CheckGround();        
-        Logica();
+        CheckGround();
+        //Logica();
         ExitFromTheCard();
     }
 
@@ -90,14 +89,14 @@ public class KingCrab : AIEntity, ITrait<CanClimb>,ITrait<CanMove>,ITrait<CanAgr
             this.Climb(this);
             IsJumped = false;
         }
-        
+
         if (m_timeBtwAttack > m_startTimeBtwAttack - 1.2)
         {
             State = States.Attack;
         }
         else
         {
-            if (GetSpeedReal() > 0 + 0.0001 || GetSpeedReal() < 0 - 0.0001)
+            if (Math.Abs(m_moveVector.x)>0.1)
             {
                 State = States.Run;
             }
@@ -106,6 +105,5 @@ public class KingCrab : AIEntity, ITrait<CanClimb>,ITrait<CanMove>,ITrait<CanAgr
                 State = States.Idle;
             }
         }
-        SpeedCalculation();
     }
 }

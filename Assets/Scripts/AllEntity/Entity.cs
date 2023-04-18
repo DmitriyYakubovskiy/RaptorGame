@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
@@ -12,11 +13,13 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected float m_timeBtwAttack;
     [SerializeField] protected float m_startTimeBtwAttack;
 
+    protected float m_timeBtwJump = 0;
+    protected float m_startTimeBtwJump = 0;
+
     [SerializeField] protected Transform m_attackPosition;
 
     protected Vector2 m_moveVector;
     protected Vector2 m_previousPosition;
-    protected float m_speedReal;
     protected float m_radiusCheckGround;
 
     protected Transform m_transform;
@@ -32,10 +35,25 @@ public abstract class Entity : MonoBehaviour
     public bool IsGrounded { get; set; }
     public bool IsFlip { get; set; }
     public bool IsJumped { get; set; }
-    
-    public LayerMask GetEnemies()
+
+    public Entity SetFlip(bool flip)
     {
-        return m_enemies;
+        IsFlip = flip;
+        if (flip == true)
+        {
+            m_transform.eulerAngles = new Vector3(0, 180, 0);
+        }
+        else
+        {
+            m_transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+        return this;
+    }
+
+    public Entity SetJumpForce(float jumpForce)
+    {
+        m_jumpForce= jumpForce;
+        return this;
     }
 
     public Entity SetTimeBtwAttack(float time)
@@ -54,6 +72,11 @@ public abstract class Entity : MonoBehaviour
         m_moveVector.x = x;
         m_moveVector.y = y;
         return this;
+    }
+
+    public LayerMask GetEnemies()
+    {
+        return m_enemies;
     }
 
     public float GetTimeBtwAttack()
@@ -95,10 +118,6 @@ public abstract class Entity : MonoBehaviour
         return m_matBlink;
     }
 
-    public Vector2 GetPreviousPosition()
-    {
-        return m_previousPosition;
-    }
     public Vector2 GetMoveVector()
     {
         return m_moveVector;
@@ -124,12 +143,7 @@ public abstract class Entity : MonoBehaviour
         return m_speed;
     }
 
-    public float GetSpeedReal()
-    {
-        return m_speedReal;
-    }
-
-    public virtual void Awake()
+    protected virtual void Awake()
     {
         IsGrounded = true;
 
@@ -146,19 +160,19 @@ public abstract class Entity : MonoBehaviour
 
         IsFlip = false;
 
-        m_matBlink = Resources.Load("DamageBlink", typeof(Material)) as Material;
+        m_matBlink = Resources.Load("Material/DamageBlink", typeof(Material)) as Material;
         m_matDefault = m_spriteRenderer.material;
 
-        m_explosion = Resources.Load("Smoke");
+        m_explosion = Resources.Load("Entity/Smoke");
     }
 
-    public virtual void CheckGround()
+    protected virtual void CheckGround()
     {
         Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + m_radiusCheckGround / 2), m_radiusCheckGround + 0.2f);
-        IsGrounded = collider.Length > 1;
+        IsGrounded = collider.Length > 2;
     }
 
-    public void RechargeTimeAttack()
+    protected void RechargeTimeAttack()
     {
         if (m_timeBtwAttack > 0)
         {
@@ -166,7 +180,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public bool CheckUnit()
+    protected bool CheckUnit()
     {
         Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(m_attackPosition.position, m_attackRange, m_enemies);
         if (enemiesToDamage.Length > 0)
@@ -176,7 +190,7 @@ public abstract class Entity : MonoBehaviour
         return false;
     }
 
-    public virtual void GetDamage(float damage)
+    public virtual void DealDamage(float damage)
     {
         m_lives -= damage;
 
@@ -192,13 +206,23 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public void SpeedCalculation()
+    //protected void SpeedCalculation()
+    //{
+    //    m_speedReal = (Math.Abs(m_rb.position.x - m_previousPosition.x)) / Time.fixedTime;
+    //    m_previousPosition.x = m_rb.position.x;
+    //}
+
+    public virtual bool RechargeTimeJump()
     {
-        m_speedReal = (Math.Abs(m_rb.position.x - m_previousPosition.x)) / Time.fixedTime;
-        m_previousPosition.x = m_rb.position.x;
+        if (m_timeBtwJump > 0)
+        {
+            m_timeBtwJump -= Time.deltaTime;
+            return false;
+        }
+        return true;
     }
 
-    public void ExitFromTheCard()
+    protected void ExitFromTheCard()
     {
         if (m_rb.position.y < -6)
         {
@@ -206,7 +230,7 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    public void ResetMaterial()
+    protected void ResetMaterial()
     {
         m_spriteRenderer.material = m_matDefault;
     }
@@ -214,7 +238,7 @@ public abstract class Entity : MonoBehaviour
     public virtual void Die()
     {
         GameObject explosionRef = (GameObject)Instantiate(m_explosion);
-        explosionRef.transform.position = new Vector3(m_spriteRenderer.gameObject.GetComponent<Transform>().position.x, m_spriteRenderer.gameObject.GetComponent<Transform>().position.y, -1);
+        explosionRef.transform.position = new Vector3(m_spriteRenderer.GetComponent<Transform>().position.x, m_spriteRenderer.GetComponent<Transform>().position.y, 0);
         Destroy(explosionRef, 1f);
 
         Destroy(this.gameObject);

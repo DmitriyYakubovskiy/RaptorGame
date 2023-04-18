@@ -1,0 +1,147 @@
+using Assets.Scripts.AllEntity;
+using Assets.Scripts.AllEntity.Traits;
+using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttackOneUnit>
+{
+    [SerializeField] private HealthBar m_healthBar;
+    [SerializeField] private FixedJoystick m_fixedJoystick;
+    [SerializeField] private Transform m_spawnPosition;
+
+    private Animator RaptorAnimator { get; set; }
+
+    private States State
+    {
+        get { return (States)RaptorAnimator.GetInteger("State"); }
+        set { RaptorAnimator.SetInteger("State", (int)value); }
+    }
+
+    private void Start()
+    {
+        RaptorAnimator = GetComponentInChildren<Animator>();
+
+        m_lives = 200;
+        m_speed = 10;
+        m_jumpForce =120;
+        m_radiusCheckGround = 0.5f;
+        m_rb.mass = 5;
+        m_startTimeBtwJump = 0.2f;
+
+        m_damage = 5;
+        m_timeBtwAttack = 0;
+        m_startTimeBtwAttack = 0.5f;
+
+        m_healthBar.SetMaxHealth(m_lives);
+    }
+
+    private void Update()
+    {        
+        if (Math.Abs(m_fixedJoystick.Horizontal)>= 0.1f)
+        {
+            SetMoveVector(m_fixedJoystick.Horizontal, 0);
+            this.Move(this);
+        }
+
+        RechargeTimeJump();
+        RechargeTimeAttack();
+        ExitFromTheCard();
+    }
+
+    private void FixedUpdate()
+    { 
+        if (IsJumped)
+        {
+            this.Jump(this);
+            IsJumped = false;
+            m_timeBtwJump=m_startTimeBtwJump;
+        }
+
+        RaptorAnimator.speed = 1;
+        if (m_timeBtwAttack > 0.2)
+        {
+            State = States.Attack;
+        }
+        else
+        {
+            if (IsGrounded)
+            {                
+                if(Math.Abs(m_fixedJoystick.Horizontal) >= 0.1f)
+                {
+                    State = States.Run;
+                    RaptorAnimator.speed = Math.Abs(m_fixedJoystick.Horizontal);
+                }
+                else
+                {
+                    State = States.Idle;
+                }
+            }
+            if (!IsGrounded)
+            {
+                if (m_previousPosition.y + 0.1f < m_rb.position.y)
+                {
+                    State = States.Jump;
+                }
+                else
+                {
+                    State = States.Fall;
+                }
+            }
+        }
+        CheckGround();
+        m_previousPosition=new Vector2(m_rb.position.x,m_rb.position.y);
+    }
+
+    protected override void CheckGround()
+    {
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(GetRb().position.x, GetRb().position.y - 0.1f), 0.3f);
+        IsGrounded = collider.Length > 1;
+    }
+
+    public override void DealDamage(float damage)
+    {
+        m_lives=m_lives - damage;
+
+        GetSpriteRenderer().material = GetMatBlink();
+
+        if (GetLives() <= 0)
+        {
+            m_healthBar.DeleteHealthBar();
+            Die();
+            //m_lives = 200;
+            //m_rb.position = m_spawnPosition.position;
+        }
+        else
+        {
+            Invoke("ResetMaterial", 0.2f);
+        }
+
+        m_healthBar.ShowHealth(this);
+    }
+    public void Jump()
+    {
+        if (IsGrounded == true && RechargeTimeJump() == true)
+        {
+            IsJumped = true;
+        }
+    }
+    public void Attack()
+    {
+        this.AttackOneUnit(this);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(m_attackPosition.position, m_attackRange);
+
+        Gizmos.color = Color.gray;
+        Gizmos.DrawWireSphere(new Vector2(m_rb.position.x, m_rb.position.y - 0.1f), 0.3f);
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.LoadScene(0);
+    }
+}

@@ -8,18 +8,17 @@ namespace Assets.Scripts.AllEntity
     {
         public static void Move(this ITrait<CanMove> trait, Entity entity)
         {
+
             if (entity.GetMoveVector().x < 0)
             {
-                entity.GetRb().gameObject.GetComponent<Transform>().eulerAngles = new Vector3(0, 180, 0);
-                entity.IsFlip = true;
+                entity.SetFlip(true);
             }
             else if (entity.GetMoveVector().x != 0)
             {
-                entity.gameObject.GetComponent<Transform>().eulerAngles = new Vector3(0, 0, 0);                
-                entity.IsFlip=false;
+                entity.SetFlip(false);
             }
 
-           entity.GetRb().velocity = new Vector2(entity.GetMoveVector().x * entity.GetSpeed(), entity.GetRb().velocity.y);
+            entity.GetRb().velocity = new Vector2(entity.GetMoveVector().x * entity.GetSpeed(), entity.GetRb().velocity.y);
         }
 
         public static void Jump(this ITrait<CanJump> trait, Entity entity)
@@ -32,9 +31,9 @@ namespace Assets.Scripts.AllEntity
             entity.GetRb().AddForce(new Vector2(0, entity.GetJumpForce()), ForceMode2D.Force);
         }
 
-        public static float AgressiveLogics(this ITrait<CanAgressiveLogics> trait, AIEntity entity)
+        public static void AgressiveLogics(this ITrait<CanAgressiveLogics> trait, AIEntity entity)
         {
-            Vector2 distance = new(Math.Abs(Raptor.GetInstance().GetRb().position.x - entity.GetRb().position.x), Math.Abs(Raptor.GetInstance().GetRb().position.y - entity.GetRb().position.y));
+            entity.SetTimePatrul(entity.GetTimePatrul() - Time.deltaTime);
 
             if (entity.RechargeTimeJump())
             {
@@ -47,34 +46,24 @@ namespace Assets.Scripts.AllEntity
                     }
                 }
             }
-            if (distance.y < 7 && distance.x < entity.GetRadiusCheck() && distance.x >= entity.GetAttackRange() * 1.5f)
+
+            entity.СheckTheMapEnd();
+            if (entity.GetTimePatrul() > 2)
             {
-                entity.SetMoveVector(new Vector2(Math.Abs(Raptor.GetInstance().GetRb().position.x - entity.GetRb().position.x) / (Raptor.GetInstance().GetRb().position.x - entity.GetRb().position.x), 0));
+                if (entity.CheckThePlayer(-1) == true) { }
             }
-            else if (distance.x <= entity.GetAttackRange() * 1.5f)
-            {
-                entity.SetMoveVector(0, 0);
-            }
-            else
+            if (entity.CheckThePlayer(-1) == false)
             {
                 if (entity.GetTimePatrul() <= 0)
                 {
-                    System.Random rand = new System.Random();
-                    entity.SetTimePatrul(rand.Next(1, 10));
-                    entity.SetMoveVectorPatrul(rand.Next(-1, 2));
-                }
-                else
-                {
-                    entity.SetTimePatrul(entity.GetTimePatrul()-Time.deltaTime);
-                    entity.SetMoveVector(entity.GetMoveVectorPatrul(), 0);
+                    entity.RandomMove();
                 }
             }
-            return entity.GetMoveVector().x;
         }
 
-        public static float PeacefulLogics(this ITrait<CanPeacefulLogics> trait, AIEntity entity)
+        public static void PeacefulLogics(this ITrait<CanPeacefulLogics> trait, AIEntity entity)
         {
-            Vector2 distance = new(Math.Abs(Raptor.GetInstance().GetRb().position.x - entity.GetRb().position.x), Math.Abs(Raptor.GetInstance().GetRb().position.y - entity.GetRb().position.y));
+            entity.SetTimePatrul(entity.GetTimePatrul() - Time.deltaTime);
 
             if (entity.RechargeTimeJump())
             {
@@ -88,25 +77,18 @@ namespace Assets.Scripts.AllEntity
                 }
             }
 
-            if (distance.y < 7 && distance.x < entity.GetRadiusCheck() && distance.x >= 0)
+            entity.СheckTheMapEnd();
+            if (entity.GetTimePatrul() > 2f)
             {
-                entity.SetMoveVector(new Vector2(-Math.Abs(Raptor.GetInstance().GetRb().position.x - entity.GetRb().position.x) / (Raptor.GetInstance().GetRb().position.x - entity.GetRb().position.x), 0));
+                entity.CheckThePlayer(1);
             }
-            else
+            if (entity.CheckThePlayer(1) == false)
             {
                 if (entity.GetTimePatrul() <= 0)
                 {
-                    System.Random rand = new System.Random();
-                    entity.SetTimePatrul(rand.Next(1, 10));
-                    entity.SetMoveVectorPatrul (rand.Next(-1, 2));
-                }
-                else
-                {
-                    entity.SetTimePatrul(entity.GetTimePatrul() - Time.deltaTime);
-                    entity.SetMoveVector(entity.GetMoveVectorPatrul(), 0);
+                    entity.RandomMove();
                 }
             }
-            return entity.GetMoveVector().x;
         }
 
         public static void AttackOneUnit(this ITrait<CanAttackOneUnit> trait, Entity entity)
@@ -116,7 +98,7 @@ namespace Assets.Scripts.AllEntity
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(entity.GetAttackPosition().position, entity.GetAttackRange(), entity.GetEnemies());
                 if (enemiesToDamage.Length > 0)
                 {
-                    enemiesToDamage[0].GetComponent<Entity>().GetDamage(entity.GetDamage());
+                    enemiesToDamage[0].GetComponent<Entity>().DealDamage(entity.GetDamage());
                 }
                 entity.SetTimeBtwAttack(entity.GetStartTimeBtwAttack());
             }
@@ -131,7 +113,7 @@ namespace Assets.Scripts.AllEntity
                 {
                     for (int i = 0; i < enemiesToDamage.Length; i++)
                     {
-                        enemiesToDamage[i].GetComponent<Entity>().GetDamage(entity.GetDamage());
+                        enemiesToDamage[i].GetComponent<Entity>().DealDamage(entity.GetDamage());
                     }
                 }
                 entity.SetTimeBtwAttack(entity.GetStartTimeBtwAttack());

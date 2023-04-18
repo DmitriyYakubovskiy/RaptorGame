@@ -3,17 +3,25 @@ using Assets.Scripts.AllEntity.Traits;
 
 public class Cactus : Entity, ITrait<CanAttackSplash>
 {
-    public override void Awake()
+    protected override void Awake()
     {
-        m_damage = 2f;
+        m_damage = 0.2f;
         m_startTimeBtwAttack = 0.5f;
     }
 
-    void Update()
+    private void Update()
     {
-        if (CheckUnit())
+        CactusAttack();
+    }
+
+    private void CactusAttack()
+    {
+        if (m_timeBtwAttack <= 0)
         {
-            this.AttackSplash(this);
+            if (CheckUnit())
+            {
+                this.AttackSplash(this);
+            }
         }
         RechargeTimeAttack();
     }
