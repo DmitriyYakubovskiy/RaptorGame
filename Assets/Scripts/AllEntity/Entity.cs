@@ -13,8 +13,13 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected float m_timeBtwAttack;
     [SerializeField] protected float m_startTimeBtwAttack;
 
+    protected float m_startLives;
+    protected string m_nameBonus;
+
     protected float m_timeBtwJump = 0;
     protected float m_startTimeBtwJump = 0;
+
+    protected float m_smookeSize;
 
     [SerializeField] protected Transform m_attackPosition;
 
@@ -35,6 +40,12 @@ public abstract class Entity : MonoBehaviour
     public bool IsGrounded { get; set; }
     public bool IsFlip { get; set; }
     public bool IsJumped { get; set; }
+
+    public Entity SetLives(float lives)
+    {
+        m_lives= lives;
+        return this;
+    }
 
     public Entity SetFlip(bool flip)
     {
@@ -163,7 +174,7 @@ public abstract class Entity : MonoBehaviour
         m_matBlink = Resources.Load("Material/DamageBlink", typeof(Material)) as Material;
         m_matDefault = m_spriteRenderer.material;
 
-        m_explosion = Resources.Load("Entity/Smoke");
+        m_explosion = Resources.Load("Prefabs/Entity/Smoke");
     }
 
     protected virtual void CheckGround()
@@ -206,12 +217,6 @@ public abstract class Entity : MonoBehaviour
         }
     }
 
-    //protected void SpeedCalculation()
-    //{
-    //    m_speedReal = (Math.Abs(m_rb.position.x - m_previousPosition.x)) / Time.fixedTime;
-    //    m_previousPosition.x = m_rb.position.x;
-    //}
-
     public virtual bool RechargeTimeJump()
     {
         if (m_timeBtwJump > 0)
@@ -238,8 +243,17 @@ public abstract class Entity : MonoBehaviour
     public virtual void Die()
     {
         GameObject explosionRef = (GameObject)Instantiate(m_explosion);
+        explosionRef.GetComponent<Transform>().localScale = new(m_smookeSize, m_smookeSize, 0);
         explosionRef.transform.position = new Vector3(m_spriteRenderer.GetComponent<Transform>().position.x, m_spriteRenderer.GetComponent<Transform>().position.y, 0);
         Destroy(explosionRef, 1f);
+
+        if (m_nameBonus == "Heal")
+        {
+            var buf = Resources.Load("Prefabs/Bonuses/"+ m_nameBonus);
+            GameObject heal = (GameObject)Instantiate(buf);
+            heal.GetComponent<Heal>().SetHeatPoint(m_startLives);
+            heal.transform.position = new Vector3(m_spriteRenderer.GetComponent<Transform>().position.x, m_spriteRenderer.GetComponent<Transform>().position.y, 0);
+        }
 
         Destroy(this.gameObject);
     }

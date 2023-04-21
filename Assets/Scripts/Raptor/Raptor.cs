@@ -12,6 +12,11 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
     private Animator RaptorAnimator { get; set; }
 
+    public HealthBar GetHealthBar()
+    {
+        return m_healthBar;
+    }
+
     private States State
     {
         get { return (States)RaptorAnimator.GetInteger("State"); }
@@ -28,8 +33,10 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         m_radiusCheckGround = 0.5f;
         m_rb.mass = 5;
         m_startTimeBtwJump = 0.2f;
+        m_startLives = m_lives;
+        m_smookeSize = 2;
 
-        m_damage = 5;
+        m_damage = 10;
         m_timeBtwAttack = 0;
         m_startTimeBtwAttack = 0.5f;
 
@@ -96,7 +103,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     protected override void CheckGround()
     {
         Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(GetRb().position.x, GetRb().position.y - 0.1f), 0.3f);
-        IsGrounded = collider.Length > 1;
+        IsGrounded = collider.Length > 2;
     }
 
     public override void DealDamage(float damage)

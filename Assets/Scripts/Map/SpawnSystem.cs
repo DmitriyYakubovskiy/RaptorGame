@@ -16,7 +16,7 @@ public class SpawnSystem : MonoBehaviour
 
     private void Awake()
     {
-        m_explosion = Resources.Load("Entity/Smoke");
+        m_explosion = Resources.Load("Prefabs/Entity/Smoke");
         m_time = m_startTime;
     }
 

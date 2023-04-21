@@ -35,7 +35,7 @@ public class ShowFps : MonoBehaviour
 
             if (m_time >= pollingTime)
             {
-                m_fpsText.text = $"FPS: {(int)(m_frameCount / m_time) + 1}";
+                m_fpsText.text = $"FPS: {(int)(m_frameCount / m_time)}";
                 m_time = 0f;
                 m_frameCount = 0;
             }

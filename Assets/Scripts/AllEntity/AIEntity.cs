@@ -10,8 +10,12 @@ namespace Assets.Scripts.AllEntity
         protected float m_timePatrul = 0;
         protected float m_jumpForceStart;
 
+        protected float m_timeCheckPlayer = 0;
+        protected float m_timeStartCheckPlayer = 0;
+
         protected float m_beginCheckPlayer = 0;
         protected float m_endCheckPlayer = 0;
+        protected Vector2 m_distance =new(0,0);
 
         protected Vector2 m_sizeCheckingWall;
         protected Animator m_animator;
@@ -73,6 +77,23 @@ namespace Assets.Scripts.AllEntity
             //}
         }
 
+        public void DistanceToPlayer()
+        {
+            m_timeCheckPlayer-= Time.deltaTime;
+
+            if (m_timeCheckPlayer <= 0)
+            {
+                m_distance = new(Math.Abs(m_raptor.transform.position.x - m_rb.position.x), Math.Abs(m_raptor.transform.position.y - m_rb.position.y));
+                m_timeCheckPlayer = m_timeStartCheckPlayer;
+            }
+        }
+
+        public void SpeedСalculation()
+        {
+            var k = Math.Abs(m_rb.position.x - m_previousPosition.x) / (m_speed * Time.deltaTime);
+            m_animator.speed = k;
+        }
+
         public virtual bool СheckTheWall()
         {
             Collider2D[] Wall = Physics2D.OverlapBoxAll(new Vector2(GetRb().position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), GetRb().position.y + GetSizeCheckingWall().y), new Vector2(GetSizeCheckingWall().x, GetSizeCheckingWall().y), 0f, m_MaskWall);
@@ -107,16 +128,27 @@ namespace Assets.Scripts.AllEntity
 
         public virtual bool CheckThePlayer(int isAgressive)
         {
-            Vector2 distance = new(Math.Abs(m_raptor.transform.position.x - m_rb.position.x), Math.Abs(m_raptor.transform.position.y - m_rb.position.y));
+            DistanceToPlayer();
+            var moveVector= -Math.Abs(m_raptor.transform.position.x - m_rb.position.x) / (m_raptor.transform.position.x - m_rb.position.x);
 
-            if (distance.y < 3 && distance.x < m_endCheckPlayer && distance.x >= m_beginCheckPlayer)
+            if (m_distance.y < 3 && m_distance.x < m_endCheckPlayer && m_distance.x >= m_beginCheckPlayer)
             {
-                m_moveVector=new Vector2(isAgressive * -Math.Abs(m_raptor.transform.position.x - m_rb.position.x) / (m_raptor.transform.position.x - m_rb.position.x), 0);
+                m_moveVector=new Vector2(isAgressive * moveVector, 0);
                 return true;
             }
-            else if (distance.x < m_beginCheckPlayer)
+            else if (m_distance.x < m_beginCheckPlayer && m_beginCheckPlayer>0)
             {
                 m_moveVector = new Vector2(0, 0);
+
+                if (moveVector == 1)
+                {
+                    SetFlip(true);
+                }
+                else
+                {
+                    SetFlip(false);
+                }
+
                 return true;
             }
             return false;

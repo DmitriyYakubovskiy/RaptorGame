@@ -13,6 +13,11 @@ public class HealthBar : MonoBehaviour
         return m_maxHealth = maxHealth;
     }
 
+    public float GetMaxHealth()
+    {
+        return m_maxHealth;
+    }
+
     public void Awake()
     {
         m_redLine = GetComponent<RectTransform>();

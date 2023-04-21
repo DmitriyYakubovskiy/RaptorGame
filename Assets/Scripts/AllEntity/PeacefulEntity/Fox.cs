@@ -18,11 +18,13 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         System.Random rand = new System.Random();
 
         m_lives = 20;
+        m_startLives = m_lives;
         m_speed = rand.Next(400, 600) / 100f;
         m_jumpForce = 36;
         m_jumpForceStart = m_jumpForce;
         m_radiusCheckGround =0.3f;
         m_rb.mass = 2;
+        m_smookeSize = 1;
 
         m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator=GetComponentInChildren<Animator>();
@@ -30,6 +32,10 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         m_endCheckPlayer = 7;
         m_beginCheckPlayer = 0f;
         IsJumped = false;
+
+        m_timeStartCheckPlayer = 0.3f;
+
+        m_nameBonus = "Heal";
 
         CounterEntity.AddEntity();
     }
@@ -50,14 +56,16 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
             IsJumped=false;
         }
 
-        if (IsJumped)
+        m_animator.speed = 1;
+        if (m_previousPosition.y < m_rb.position.y && !IsGrounded)
         {
             State = States.Jump;
         }
         else
         {
-            if (Math.Abs(m_moveVector.x) >= 0.11)
+            if (m_moveVector.x != 0)
             {
+                Speed—alculation();
                 State = States.Run;
             }
             else
@@ -65,6 +73,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
                 State = States.Idle;
             }
         }
+        m_previousPosition=m_rb.position;
     }
 
     private void OnDestroy()

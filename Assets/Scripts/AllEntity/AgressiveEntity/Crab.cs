@@ -18,22 +18,25 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         System.Random rand = new System.Random();
 
         m_lives = 30;
-        m_speed = rand.Next(150, 250) / 100f;
+        m_startLives = m_lives;
+        m_speed = 2;
         m_jumpForce = 68;
         m_jumpForceStart = m_jumpForce;
         m_radiusCheckGround = 0.3f;
         m_rb.mass = 4;
+        m_smookeSize = 1.2f;
 
         m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator = GetComponentInChildren<Animator>();
         m_startTimeBtwJump = 1.5f;
         m_endCheckPlayer = 7;
-        m_beginCheckPlayer= 0.8f;
+        m_beginCheckPlayer= 1f;
+        m_timeStartCheckPlayer = 0.6f;
         IsJumped = false;
 
         m_damage = 7f;
         m_startTimeBtwAttack = 2f;
-
+        
         CounterEntity.AddAgressiveEntity();
         CounterEntity.AddEntity();
     }
@@ -59,14 +62,16 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
             IsJumped = false;
         }
 
+        m_animator.speed = 1;
         if (m_timeBtwAttack > m_startTimeBtwAttack-0.5)
         {
             State = States.Attack;
         }
         else
         {
-            if (Math.Abs(m_moveVector.x) >= 0.1)
+            if (m_moveVector.x != 0)
             {
+                Speed—alculation();
                 State = States.Run;
             }
             else
@@ -74,6 +79,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
                 State = States.Idle;
             }
         }
+        m_previousPosition = m_rb.position;
     }
 
     private void OnDestroy()
