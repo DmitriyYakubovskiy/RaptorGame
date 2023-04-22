@@ -7768,7 +7768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AIEntity:
   - {fileID: 8145585116694720998, guid: a93ac7ac5522b0a42836ab2837f6ed12, type: 3}
-  - {fileID: 8386245669249936403, guid: cbdaf6e312f7fce48b034d3528e612c7, type: 3}
+  - {fileID: 3177203911309857539, guid: cbdaf6e312f7fce48b034d3528e612c7, type: 3}
   m_startTime: 2
   m_SpawnY: 4
   m_beginSpawnXRange: -60
