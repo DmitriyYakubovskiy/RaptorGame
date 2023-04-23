@@ -249,7 +249,7 @@ public abstract class Entity : MonoBehaviour
 
         if (m_nameBonus == "Heal")
         {
-            var buf = Resources.Load("Prefabs/Bonuses/"+ m_nameBonus);
+            var buf = Resources.Load("Prefabs/Entity/"+ m_nameBonus+"/"+ m_nameBonus);
             GameObject heal = (GameObject)Instantiate(buf);
             heal.GetComponent<Heal>().SetHeatPoint(m_startLives);
             heal.transform.position = new Vector3(m_spriteRenderer.GetComponent<Transform>().position.x, m_spriteRenderer.GetComponent<Transform>().position.y, 0);

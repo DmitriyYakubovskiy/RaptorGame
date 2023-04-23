@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +31,6 @@ public class HealthBar : MonoBehaviour
         if (raptor.GetLives() != 0 && raptor != null)
         {
             m_fill = raptor.GetLives() / m_maxHealth;
-
         }
 
         m_redLine.GetComponent<Image>().fillAmount = m_fill;

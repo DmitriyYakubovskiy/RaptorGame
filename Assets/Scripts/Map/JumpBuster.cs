@@ -45,7 +45,10 @@ public class JumpBuster : MonoBehaviour
         {
             for (int i = 0; i < m_colider.Length; i++)
             {
-                m_colider[i].GetComponent<AIEntity>().SetJumpForce(m_colider[i].GetComponent<AIEntity>().GetJumpForceStart());
+                if (m_colider[i].gameObject != null)
+                {
+                    m_colider[i].GetComponent<AIEntity>().SetJumpForce(m_colider[i].GetComponent<AIEntity>().GetJumpForceStart());
+                }
             }
         }
     }
