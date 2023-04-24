@@ -20,7 +20,9 @@ public class CounterEntity : MonoBehaviour
 
     private void Awake()
     {
-        isUpdate= true;
+        m_countEntity = 0;
+        m_countAgressiveEntity = 0;
+        isUpdate = true;
     }
 
     private void Update()

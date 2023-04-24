@@ -52,11 +52,11 @@ public abstract class Entity : MonoBehaviour
         IsFlip = flip;
         if (flip == true)
         {
-            m_transform.eulerAngles = new Vector3(0, 180, 0);
+            m_transform.eulerAngles = new Vector2(0, 180);
         }
         else
         {
-            m_transform.eulerAngles = new Vector3(0, 0, 0);
+            m_transform.eulerAngles = new Vector2(0, 0);
         }
         return this;
     }

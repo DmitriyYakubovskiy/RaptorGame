@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Zoom : MonoBehaviour
 {
-    public Camera cam;
-    public float defaultFov;
+    [SerializeField] private Camera cam;
+    private float defaultFov;
 
     private void Awake()
     {

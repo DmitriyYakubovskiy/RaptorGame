@@ -22,7 +22,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         m_speed = rand.Next(400, 600) / 100f;
         m_jumpForce = 36;
         m_jumpForceStart = m_jumpForce;
-        m_radiusCheckGround =0.3f;
+        m_radiusCheckGround =0.06f;
         m_rb.mass = 2;
         m_smookeSize = 1;
 

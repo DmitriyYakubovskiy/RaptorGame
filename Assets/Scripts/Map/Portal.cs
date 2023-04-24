@@ -1,7 +1,5 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class Portal : MonoBehaviour
 {
@@ -44,8 +42,9 @@ public class Portal : MonoBehaviour
         if (m_time <= 0)
         {
             m_panel.gameObject.SetActive(true);
-            //SceneManager.LoadScene(0);
             m_processBar.SetActive(false);
+            LevelProgress.m_levels[SceneManager.GetActiveScene().buildIndex] = true;
+            PlayerPrefs.SetInt("level"+SceneManager.GetActiveScene().buildIndex.ToString(),1);
         }
     }
 
@@ -53,7 +52,7 @@ public class Portal : MonoBehaviour
     {
         if (collision.gameObject.name == "Raptor")
         {
-            if (CounterEntity.GetCountAgressiveEntity() == 0)
+            if (CounterEntity.GetCountAgressiveEntity() <= 0)
             {
                 m_isInside = true;
                 m_processBar.SetActive(true);

@@ -80,11 +80,20 @@ namespace Assets.Scripts.AllEntity
         public void DistanceToPlayer()
         {
             m_timeCheckPlayer-= Time.deltaTime;
-
-            if (m_timeCheckPlayer <= 0)
+            if (m_raptor != null)
             {
-                m_distance = new(Math.Abs(m_raptor.transform.position.x - m_rb.position.x), Math.Abs(m_raptor.transform.position.y - m_rb.position.y));
-                m_timeCheckPlayer = m_timeStartCheckPlayer;
+                if (m_timeCheckPlayer <= 0)
+                {
+                    m_distance = new(Math.Abs(m_raptor.transform.position.x - m_rb.position.x), Math.Abs(m_raptor.transform.position.y - m_rb.position.y));
+                    m_timeCheckPlayer = m_timeStartCheckPlayer;
+                }
+            }
+            else
+            {
+                if (m_timeCheckPlayer <= 0)
+                {
+                    m_distance = new(100, 100);
+                }
             }
         }
 
@@ -129,7 +138,15 @@ namespace Assets.Scripts.AllEntity
         public virtual bool CheckThePlayer(int isAgressive)
         {
             DistanceToPlayer();
-            var moveVector= -Math.Abs(m_raptor.transform.position.x - m_rb.position.x) / (m_raptor.transform.position.x - m_rb.position.x);
+            float moveVector;
+            if (m_raptor == null)
+            {
+                moveVector = 0;
+            }
+            else
+            {
+                moveVector = -Math.Abs(m_raptor.transform.position.x - m_rb.position.x) / (m_raptor.transform.position.x - m_rb.position.x);
+            }
 
             if (m_distance.y < 3 && m_distance.x < m_endCheckPlayer && m_distance.x >= m_beginCheckPlayer)
             {

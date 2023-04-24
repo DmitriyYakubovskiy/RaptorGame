@@ -2,13 +2,12 @@ using Assets.Scripts.AllEntity;
 using Assets.Scripts.AllEntity.Traits;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttackOneUnit>
 {
     [SerializeField] private HealthBar m_healthBar;
     [SerializeField] private FixedJoystick m_fixedJoystick;
-    [SerializeField] private Transform m_spawnPosition;
+    [SerializeField] private Transform m_diePanel;
 
     private Animator RaptorAnimator { get; set; }
 
@@ -29,12 +28,12 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
         m_lives = 200;
         m_speed = 10;
-        m_jumpForce =120;
+        m_jumpForce = 120;
         m_radiusCheckGround = 0.5f;
         m_rb.mass = 5;
-        m_startTimeBtwJump = 0.2f;
+        m_startTimeBtwJump = 0.1f;
         m_startLives = m_lives;
-        m_smookeSize = 2;
+        m_smookeSize = 1.8f;
 
         m_damage = 10;
         m_timeBtwAttack = 0;
@@ -114,8 +113,9 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
         if (GetLives() <= 0)
         {
-            m_healthBar.DeleteHealthBar();
+            //m_healthBar.DeleteHealthBar();
             Die();
+            m_diePanel.gameObject.SetActive(true);
             //m_lives = 200;
             //m_rb.position = m_spawnPosition.position;
         }
@@ -145,10 +145,5 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
         Gizmos.color = Color.gray;
         Gizmos.DrawWireSphere(new Vector2(m_rb.position.x, m_rb.position.y - 0.1f), 0.3f);
-    }
-
-    private void OnDestroy()
-    {
-        SceneManager.LoadScene(0);
     }
 }

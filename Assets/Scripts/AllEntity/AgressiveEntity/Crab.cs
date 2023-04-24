@@ -1,7 +1,6 @@
 using Assets.Scripts.AllEntity;
 using Assets.Scripts.AllEntity.Traits;
 using UnityEngine;
-using System;
 
 public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgressiveLogics>, ITrait<CanAttackOneUnit>
 {
@@ -22,7 +21,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         m_speed = 2;
         m_jumpForce = 68;
         m_jumpForceStart = m_jumpForce;
-        m_radiusCheckGround = 0.3f;
+        m_radiusCheckGround = 0.18f;
         m_rb.mass = 4;
         m_smookeSize = 1.2f;
 
