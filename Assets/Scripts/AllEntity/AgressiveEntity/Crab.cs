@@ -14,8 +14,6 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
     {
         SearchRaptor();
 
-        System.Random rand = new System.Random();
-
         m_lives = 30;
         m_startLives = m_lives;
         m_speed = 2;
@@ -30,6 +28,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         m_startTimeBtwJump = 1.5f;
         m_endCheckPlayer = 7;
         m_beginCheckPlayer= 1f;
+        m_YCheckPlayer = 3;
         m_timeStartCheckPlayer = 0.6f;
         IsJumped = false;
 
@@ -42,11 +41,11 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
 
     private void Update()
     {
-        if (CheckUnit())
+        if ((this as IEntityAttack).CheckUnit(m_attackPosition, m_attackRange, m_enemies))
         {
             this.AttackOneUnit(this);
         }
-        RechargeTimeAttack();
+        (this as IEntityAttack).RechargeTimeAttack(m_timeBtwAttack);
         CheckGround();
         this.AgressiveLogics(this);
         this.Move(this);

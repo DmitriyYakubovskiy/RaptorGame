@@ -15,10 +15,13 @@ namespace Assets.Scripts.AllEntity
 
         protected float m_beginCheckPlayer = 0;
         protected float m_endCheckPlayer = 0;
+        protected float m_YCheckPlayer = 0;
         protected Vector2 m_distance =new(0,0);
 
         protected Vector2 m_sizeCheckingWall;
         protected Animator m_animator;
+
+        protected System.Random m_rand = new System.Random();
 
         [SerializeField] private LayerMask m_MaskWall;
         [SerializeField] private LayerMask m_MaskEndMap;
@@ -105,7 +108,7 @@ namespace Assets.Scripts.AllEntity
 
         public virtual bool СheckTheWall()
         {
-            Collider2D[] Wall = Physics2D.OverlapBoxAll(new Vector2(GetRb().position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), GetRb().position.y + GetSizeCheckingWall().y), new Vector2(GetSizeCheckingWall().x, GetSizeCheckingWall().y), 0f, m_MaskWall);
+            Collider2D[] Wall = Physics2D.OverlapBoxAll(new Vector2(m_rb.position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), m_rb.position.y + GetSizeCheckingWall().y), new Vector2(GetSizeCheckingWall().x, GetSizeCheckingWall().y), 0f, m_MaskWall);
             
             if (Wall?.Length > 2)
             {
@@ -116,7 +119,7 @@ namespace Assets.Scripts.AllEntity
 
         public virtual bool СheckTheMapEnd()
         {
-            Collider2D[] End = Physics2D.OverlapBoxAll(new Vector2(GetRb().position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), GetRb().position.y + GetSizeCheckingWall().y), new Vector2(GetSizeCheckingWall().x, GetSizeCheckingWall().y), 0f, m_MaskEndMap);
+            Collider2D[] End = Physics2D.OverlapBoxAll(new Vector2(m_rb.position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), m_rb.position.y + GetSizeCheckingWall().y), new Vector2(GetSizeCheckingWall().x, GetSizeCheckingWall().y), 0f, m_MaskEndMap);
 
             if (End?.Length > 0)
             {
@@ -148,9 +151,21 @@ namespace Assets.Scripts.AllEntity
                 moveVector = -Math.Abs(m_raptor.transform.position.x - m_rb.position.x) / (m_raptor.transform.position.x - m_rb.position.x);
             }
 
-            if (m_distance.y < 3 && m_distance.x < m_endCheckPlayer && m_distance.x >= m_beginCheckPlayer)
+            if (m_distance.y < m_YCheckPlayer && m_distance.x < m_endCheckPlayer && m_distance.x >= m_beginCheckPlayer)
             {
-                m_moveVector=new Vector2(isAgressive * moveVector, 0);
+                m_moveVector = new Vector2(isAgressive * moveVector, 0);
+                return true;
+            }
+            else if(m_distance.y < m_YCheckPlayer && m_distance.x < m_endCheckPlayer && m_distance.x < m_beginCheckPlayer && m_distance.y > 0.5 && m_timeBtwJump <= 0 && m_beginCheckPlayer > 0)
+            {
+                if (!IsFlip)
+                {
+                    m_moveVector = new Vector2(1, 0);
+                }
+                else
+                {
+                    m_moveVector = new Vector2(-1, 0);
+                }
                 return true;
             }
             else if (m_distance.x < m_beginCheckPlayer && m_beginCheckPlayer>0)
@@ -173,21 +188,21 @@ namespace Assets.Scripts.AllEntity
 
         public virtual void RandomMove()
         {
-            System.Random rand = new System.Random();
-            m_timePatrul=rand.Next(1, 5);
-            m_moveVector.x=rand.Next(-1, 2);
+            //System.Random rand = new System.Random();
+            m_timePatrul= m_rand.Next(1, 5);
+            m_moveVector.x= m_rand.Next(-1, 2);
         }
 
         void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawWireCube(new Vector3(GetRb().position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), GetRb().position.y + +GetSizeCheckingWall().y, 1), new Vector3(GetSizeCheckingWall().x, GetSizeCheckingWall().y, 1));
+            Gizmos.DrawWireCube(new Vector3(m_rb.position.x + (IsFlip == true ? -GetSizeCheckingWall().x : GetSizeCheckingWall().x), m_rb.position.y + +GetSizeCheckingWall().y, 1), new Vector3(GetSizeCheckingWall().x, GetSizeCheckingWall().y, 1));
 
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(m_attackPosition.position, m_attackRange);
 
             Gizmos.color = Color.gray;
-            Gizmos.DrawWireSphere(new Vector2(GetRb().position.x, GetRb().position.y + GetRadiusCheckGround() / 2), GetRadiusCheckGround() + 0.2f);
+            Gizmos.DrawWireSphere(new Vector2(m_rb.position.x, m_rb.position.y + GetRadiusCheckGround() / 2), GetRadiusCheckGround() + 0.2f);
         }
     }
 }

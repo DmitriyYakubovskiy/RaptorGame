@@ -25,11 +25,12 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
         m_rb.mass = 5;
         m_smookeSize = 1.8f;
 
-        m_sizeCheckingWall = new Vector2(0.9f, 0.09f);
+        m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator = GetComponentInChildren<Animator>();
         m_startTimeBtwJump = 0.5f;
-        m_endCheckPlayer = 18;
+        m_endCheckPlayer = 20;
         m_beginCheckPlayer = 1.5f;
+        m_YCheckPlayer = 8f;
         m_timeStartCheckPlayer = 0.1f;
         IsJumped = false;
 
@@ -42,11 +43,11 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
 
     private void Update()
     {
-        if (CheckUnit())
+        if ((this as IEntityAttack).CheckUnit(m_attackPosition,m_attackRange,m_enemies))
         {
             this.AttackOneUnit(this);
         }
-        RechargeTimeAttack();
+         (this as IEntityAttack).RechargeTimeAttack(m_timeBtwAttack);
         CheckGround();
         this.AgressiveLogics(this);
         this.Move(this);

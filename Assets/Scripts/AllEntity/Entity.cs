@@ -1,8 +1,6 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour
+public abstract class Entity : MonoBehaviour, IEntityAttack
 {
     [SerializeField] protected float m_lives;
     [SerializeField] protected float m_speed;
@@ -30,9 +28,9 @@ public abstract class Entity : MonoBehaviour
     protected Transform m_transform;
     protected Rigidbody2D m_rb;
 
-    private SpriteRenderer m_spriteRenderer;
-    private Material m_matBlink;
-    private Material m_matDefault;
+    protected SpriteRenderer m_spriteRenderer;
+    protected Material m_matBlink;
+    protected Material m_matDefault;
 
     private UnityEngine.Object m_explosion;
 
@@ -67,10 +65,9 @@ public abstract class Entity : MonoBehaviour
         return this;
     }
 
-    public Entity SetTimeBtwAttack(float time)
+    public void SetTimeBtwAttack(float time)
     {
         m_timeBtwAttack = time;
-        return this;
     }
 
     public Entity SetMoveVector(Vector2 moveVector)
@@ -139,7 +136,7 @@ public abstract class Entity : MonoBehaviour
         return m_lives;
     }
 
-    public Rigidbody2D GetRb()
+    public Rigidbody2D GetRigidbody()
     {
         return m_rb;
     }
@@ -183,24 +180,6 @@ public abstract class Entity : MonoBehaviour
         IsGrounded = collider.Length > 2;
     }
 
-    protected void RechargeTimeAttack()
-    {
-        if (m_timeBtwAttack > 0)
-        {
-            m_timeBtwAttack -= Time.deltaTime;
-        }
-    }
-
-    protected bool CheckUnit()
-    {
-        Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(m_attackPosition.position, m_attackRange, m_enemies);
-        if (enemiesToDamage.Length > 0)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public virtual void DealDamage(float damage)
     {
         m_lives -= damage;
@@ -213,7 +192,7 @@ public abstract class Entity : MonoBehaviour
         }
         else
         {
-            Invoke("ResetMaterial", 0.2f);
+            Invoke("ResetDamageMaterial", 0.2f);
         }
     }
 
@@ -229,13 +208,13 @@ public abstract class Entity : MonoBehaviour
 
     protected void ExitFromTheCard()
     {
-        if (m_rb.position.y < -6)
+        if (m_rb.position.y < -20)
         {
             Die();
         }
     }
 
-    protected void ResetMaterial()
+    protected void ResetDamageMaterial()
     {
         m_spriteRenderer.material = m_matDefault;
     }

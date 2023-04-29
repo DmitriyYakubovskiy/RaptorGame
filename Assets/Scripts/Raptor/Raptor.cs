@@ -8,7 +8,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     [SerializeField] private HealthBar m_healthBar;
     [SerializeField] private FixedJoystick m_fixedJoystick;
     [SerializeField] private Transform m_diePanel;
-
+    private Material m_matHeal;
     private Animator RaptorAnimator { get; set; }
 
     public HealthBar GetHealthBar()
@@ -29,7 +29,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         m_lives = 200;
         m_speed = 10;
         m_jumpForce = 120;
-        m_radiusCheckGround = 0.5f;
+        m_radiusCheckGround = 0.4f;
         m_rb.mass = 5;
         m_startTimeBtwJump = 0.1f;
         m_startLives = m_lives;
@@ -40,28 +40,30 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         m_startTimeBtwAttack = 0.5f;
 
         m_healthBar.SetMaxHealth(m_lives);
+
+        m_matHeal = Resources.Load("Material/HealBlink", typeof(Material)) as Material;
     }
 
     private void Update()
-    {        
-        if (Math.Abs(m_fixedJoystick.Horizontal)>= 0.1f)
+    {
+        if (Math.Abs(m_fixedJoystick.Horizontal) >= 0.1f)
         {
             SetMoveVector(m_fixedJoystick.Horizontal, 0);
             this.Move(this);
         }
 
         RechargeTimeJump();
-        RechargeTimeAttack();
+        (this as IEntityAttack).RechargeTimeAttack(m_timeBtwAttack);
         ExitFromTheCard();
     }
 
     private void FixedUpdate()
-    { 
+    {
         if (IsJumped)
         {
             this.Jump(this);
             IsJumped = false;
-            m_timeBtwJump=m_startTimeBtwJump;
+            m_timeBtwJump = m_startTimeBtwJump;
         }
 
         RaptorAnimator.speed = 1;
@@ -72,8 +74,8 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         else
         {
             if (IsGrounded)
-            {                
-                if(Math.Abs(m_fixedJoystick.Horizontal) >= 0.1f)
+            {
+                if (Math.Abs(m_fixedJoystick.Horizontal) >= 0.1f)
                 {
                     State = States.Run;
                     RaptorAnimator.speed = Math.Abs(m_fixedJoystick.Horizontal);
@@ -96,18 +98,18 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
             }
         }
         CheckGround();
-        m_previousPosition=new Vector2(m_rb.position.x,m_rb.position.y);
+        m_previousPosition = new Vector2(m_rb.position.x, m_rb.position.y);
     }
 
     protected override void CheckGround()
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(GetRb().position.x, GetRb().position.y - 0.1f), 0.3f);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y - 0.1f), m_radiusCheckGround);
         IsGrounded = collider.Length > 2;
     }
 
     public override void DealDamage(float damage)
     {
-        m_lives=m_lives - damage;
+        m_lives = m_lives - damage;
 
         GetSpriteRenderer().material = GetMatBlink();
 
@@ -121,11 +123,32 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         }
         else
         {
-            Invoke("ResetMaterial", 0.2f);
+            Invoke("ResetDamageMaterial", 0.2f);
         }
 
         m_healthBar.ShowHealth(this);
     }
+
+    public void AddHeatPoint(float hp)
+    {
+        if (m_lives + hp > m_healthBar.GetMaxHealth())
+        {
+            m_lives=m_healthBar.GetMaxHealth();
+        }
+        else
+        {
+            m_lives+=hp;
+        }
+        m_healthBar.ShowHealth(this);
+        m_spriteRenderer.material = m_matHeal;
+        Invoke("ResetHealMaterial", 0.2f);
+    }
+
+    public void ResetHealMaterial()
+    {
+        m_spriteRenderer.material = m_matDefault;
+    }
+
     public void Jump()
     {
         if (IsGrounded == true && RechargeTimeJump() == true)

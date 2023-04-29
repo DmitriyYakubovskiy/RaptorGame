@@ -1,11 +1,13 @@
 using Assets.Scripts.AllEntity;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class JumpBuster : MonoBehaviour
 {
     [SerializeField] private LayerMask m_AIEntityMask;
     [SerializeField] private Transform m_transform;
     [SerializeField] private float m_boost;
+    [SerializeField] private string m_tagEntity;
 
     private Collider2D[] m_colider;
     private float m_timeStart=1.5f;
@@ -34,7 +36,11 @@ public class JumpBuster : MonoBehaviour
         {
             for (int i=0;i<entity.Length;i++)
             {
-                entity[i].GetComponent<AIEntity>().SetJumpForce(entity[i].GetComponent<AIEntity>().GetJumpForce()*m_boost);
+                if (m_tagEntity == entity[i].gameObject.tag)
+                {
+                    Debug.Log(22222222222);
+                    entity[i].GetComponent<AIEntity>().SetJumpForce(entity[i].GetComponent<AIEntity>().GetJumpForce() * m_boost);
+                }
             }
         }
     }

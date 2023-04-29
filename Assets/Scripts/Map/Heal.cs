@@ -16,15 +16,7 @@ public class Heal : MonoBehaviour
             var raptor = collision.GetComponent<Raptor>();
             if (raptor.GetHealthBar().GetMaxHealth()!=raptor.GetLives())
             {
-                if (raptor.GetLives() + m_heatPoint > raptor.GetHealthBar().GetMaxHealth())
-                {
-                    raptor.SetLives(raptor.GetHealthBar().GetMaxHealth());
-                }
-                else
-                {
-                    raptor.SetLives(raptor.GetLives()+m_heatPoint);
-                }
-                raptor.GetHealthBar().ShowHealth(raptor);
+                raptor.AddHeatPoint(m_heatPoint);
                 Destroy(this.gameObject);
             }
         }

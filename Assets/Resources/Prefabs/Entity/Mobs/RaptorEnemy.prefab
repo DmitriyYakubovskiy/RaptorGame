@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 3369232062425761873}
   m_Layer: 6
   m_Name: RaptorEnemy
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -206,7 +206,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.026683725, y: 0.28420773}
-  m_Size: {x: 1.1000003, y: 0.5880061}
+  m_Size: {x: 0.9, y: 0.5880061}
   m_Direction: 1
 --- !u!70 &3369232062425761873
 CapsuleCollider2D:
@@ -222,7 +222,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.20620996, y: 0.2820432}
-  m_Size: {x: 0.78517485, y: 0.54968464}
+  m_Size: {x: 0.6, y: 0.54968464}
   m_Direction: 1
 --- !u!1 &3369232063141436988
 GameObject:

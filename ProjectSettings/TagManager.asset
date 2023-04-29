@@ -7,6 +7,7 @@ TagManager:
   - Platform
   - Enemy
   - Sprite
+  - JumpBuster
   layers:
   - Default
   - TransparentFX

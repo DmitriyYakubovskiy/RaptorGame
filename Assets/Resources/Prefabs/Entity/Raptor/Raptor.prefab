@@ -114,7 +114,7 @@ MonoBehaviour:
     m_Bits: 64
   m_healthBar: {fileID: 0}
   m_fixedJoystick: {fileID: 0}
-  m_spawnPosition: {fileID: 0}
+  m_diePanel: {fileID: 0}
 --- !u!70 &6271652111186704788
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -129,7 +129,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.19273376, y: 0.30087262}
-  m_Size: {x: 0.88546824, y: 0.5880553}
+  m_Size: {x: 0.6, y: 0.5880553}
   m_Direction: 1
 --- !u!70 &6271652111186704791
 CapsuleCollider2D:
@@ -145,7 +145,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.000002717629, y: 0.29712185}
-  m_Size: {x: 1.1, y: 0.6100444}
+  m_Size: {x: 0.9, y: 0.6100444}
   m_Direction: 1
 --- !u!1 &6271652111611762477
 GameObject:

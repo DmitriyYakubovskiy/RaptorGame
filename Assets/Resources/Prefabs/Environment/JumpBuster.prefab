@@ -49,3 +49,4 @@ MonoBehaviour:
     m_Bits: 64
   m_transform: {fileID: 0}
   m_boost: 1.3
+  m_tagEntity: JumpBuster

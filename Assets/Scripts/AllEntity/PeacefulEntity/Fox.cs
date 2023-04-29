@@ -15,11 +15,9 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
     {
         SearchRaptor();
 
-        System.Random rand = new System.Random();
-
         m_lives = 20;
         m_startLives = m_lives;
-        m_speed = rand.Next(400, 600) / 100f;
+        m_speed = m_rand.Next(400, 600) / 100f;
         m_jumpForce = 36;
         m_jumpForceStart = m_jumpForce;
         m_radiusCheckGround =0.06f;
@@ -31,6 +29,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         m_startTimeBtwJump = 1f;
         m_endCheckPlayer = 7;
         m_beginCheckPlayer = 0f;
+        m_YCheckPlayer = 3f;
         IsJumped = false;
 
         m_timeStartCheckPlayer = 0.3f;

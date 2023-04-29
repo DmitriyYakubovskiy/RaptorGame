@@ -18,17 +18,17 @@ namespace Assets.Scripts.AllEntity
                 entity.SetFlip(false);
             }
 
-            entity.GetRb().velocity = new Vector2(entity.GetMoveVector().x * entity.GetSpeed(), entity.GetRb().velocity.y);
+            entity.GetRigidbody().velocity = new Vector2(entity.GetMoveVector().x * entity.GetSpeed(), entity.GetRigidbody().velocity.y);
         }
 
         public static void Jump(this ITrait<CanJump> trait, Entity entity)
         {
-            entity.GetRb().AddForce(new Vector2(0, entity.GetJumpForce()), ForceMode2D.Impulse);
+            entity.GetRigidbody().AddForce(new Vector2(0, entity.GetJumpForce()), ForceMode2D.Impulse);
         }
 
         public static void Climb(this ITrait<CanClimb> trait, Entity entity)
         {
-            entity.GetRb().AddForce(new Vector2(0, entity.GetJumpForce()), ForceMode2D.Force);
+            entity.GetRigidbody().AddForce(new Vector2(0, entity.GetJumpForce()), ForceMode2D.Force);
         }
 
         public static void AgressiveLogics(this ITrait<CanAgressiveLogics> trait, AIEntity entity)
@@ -91,7 +91,7 @@ namespace Assets.Scripts.AllEntity
             }
         }
 
-        public static void AttackOneUnit(this ITrait<CanAttackOneUnit> trait, Entity entity)
+        public static void AttackOneUnit(this ITrait<CanAttackOneUnit> trait, IEntityAttack entity)
         {
             if (entity.GetTimeBtwAttack() <= 0)
             {
@@ -104,7 +104,7 @@ namespace Assets.Scripts.AllEntity
             }
         }
 
-        public static void AttackSplash(this ITrait<CanAttackSplash> trait, Entity entity)
+        public static void AttackSplash(this ITrait<CanAttackSplash> trait, IEntityAttack entity)
         {
             if (entity.GetTimeBtwAttack() <= 0)
             {

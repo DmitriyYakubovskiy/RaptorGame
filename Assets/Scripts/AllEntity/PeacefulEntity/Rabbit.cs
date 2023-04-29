@@ -30,6 +30,7 @@ public class Rabbit : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefu
         m_startTimeBtwJump = 1f;
         m_endCheckPlayer = 5;
         m_beginCheckPlayer = 0f;
+        m_YCheckPlayer = 3;
         IsJumped = false;
 
         m_timeStartCheckPlayer = 0.4f;
