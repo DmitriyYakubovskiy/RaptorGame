@@ -28,7 +28,7 @@ public class HealthBar : MonoBehaviour
 
     public void ShowHealth(Raptor raptor)
     {
-        if (raptor.GetLives() != 0 && raptor != null)
+        if (raptor.GetLives() >= 0 && raptor != null)
         {
             m_fill = raptor.GetLives() / m_maxHealth;
         }

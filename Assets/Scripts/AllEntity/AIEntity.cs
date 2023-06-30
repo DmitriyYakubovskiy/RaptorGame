@@ -21,6 +21,8 @@ namespace Assets.Scripts.AllEntity
         protected Vector2 m_sizeCheckingWall;
         protected Animator m_animator;
 
+        protected float experience;
+
         protected System.Random m_rand = new System.Random();
 
         [SerializeField] private LayerMask m_MaskWall;

@@ -396,6 +396,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1259953558}
     - target: {fileID: 6271652111380682524, guid: 1eff4f5b5d897ea4f9a3d3674dec5e90, type: 3}
+      propertyPath: experienceBar
+      value: 
+      objectReference: {fileID: 1259953560}
+    - target: {fileID: 6271652111380682524, guid: 1eff4f5b5d897ea4f9a3d3674dec5e90, type: 3}
       propertyPath: m_fixedJoystick
       value: 
       objectReference: {fileID: 1259953559}
@@ -11625,6 +11629,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45977bbae16431c46a013576a1aea384, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1259953560 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1950836582213612937, guid: 3e0afad97f4d7a84498ed6e242248e9f, type: 3}
+  m_PrefabInstance: {fileID: 1259953557}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e72afbf7e2e9d4088b39d29613de32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1260006853 stripped

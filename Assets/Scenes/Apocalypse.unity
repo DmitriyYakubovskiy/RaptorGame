@@ -2012,6 +2012,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3307749142218133259, guid: 3e0afad97f4d7a84498ed6e242248e9f, type: 3}
   m_PrefabInstance: {fileID: 368659173}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &368659177 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1950836582213612937, guid: 3e0afad97f4d7a84498ed6e242248e9f, type: 3}
+  m_PrefabInstance: {fileID: 368659173}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13e72afbf7e2e9d4088b39d29613de32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &388871420 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3177203911119254274, guid: cbdaf6e312f7fce48b034d3528e612c7, type: 3}
@@ -2594,6 +2605,10 @@ PrefabInstance:
       propertyPath: m_healthBar
       value: 
       objectReference: {fileID: 368659174}
+    - target: {fileID: 6271652111380682524, guid: 1eff4f5b5d897ea4f9a3d3674dec5e90, type: 3}
+      propertyPath: experienceBar
+      value: 
+      objectReference: {fileID: 368659177}
     - target: {fileID: 6271652111380682524, guid: 1eff4f5b5d897ea4f9a3d3674dec5e90, type: 3}
       propertyPath: m_attackRange
       value: 0.53

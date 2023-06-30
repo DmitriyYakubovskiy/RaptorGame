@@ -1,5 +1,6 @@
 using Assets.Scripts.AllEntity;
 using Assets.Scripts.AllEntity.Traits;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgressiveLogics>, ITrait<CanAttackOneUnit>
@@ -14,10 +15,12 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
     {
         SearchRaptor();
 
+        experience = 20;
+
         m_lives = 30;
         m_startLives = m_lives;
         m_speed = 2;
-        m_jumpForce = 68;
+        m_jumpForce = 72;
         m_jumpForceStart = m_jumpForce;
         m_radiusCheckGround = 0.18f;
         m_rb.mass = 4;
@@ -84,5 +87,6 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
     {
         CounterEntity.DeleteAgressiveEntity();
         CounterEntity.DeleteEntity();
+        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }

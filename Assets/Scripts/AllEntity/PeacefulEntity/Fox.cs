@@ -15,6 +15,8 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
     {
         SearchRaptor();
 
+        experience = 3;
+
         m_lives = 20;
         m_startLives = m_lives;
         m_speed = m_rand.Next(400, 600) / 100f;
@@ -78,5 +80,6 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
     private void OnDestroy()
     {
         CounterEntity.DeleteEntity();
+        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }

@@ -206,7 +206,7 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
         return true;
     }
 
-    protected void ExitFromTheCard()
+    protected virtual void ExitFromTheCard()
     {
         if (m_rb.position.y < -20)
         {

@@ -9,11 +9,43 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     [SerializeField] private FixedJoystick m_fixedJoystick;
     [SerializeField] private Transform m_diePanel;
     private Material m_matHeal;
+    private float experience=0;
+    private float maxExperience;
+    private int updatePoints=1;
+    private int level = 1;
+
+    public ExperienceBar experienceBar;
+
     private Animator RaptorAnimator { get; set; }
 
     public HealthBar GetHealthBar()
     {
         return m_healthBar;
+    }
+
+    public ExperienceBar GetExperienceBar()
+    {
+        return experienceBar;
+    }
+
+    public float GetExperience()
+    {
+        return experience;
+    }
+
+    public int GetUpdatePoints()
+    {
+        return updatePoints;
+    }
+
+    public void SetExperience(float exp)
+    {
+        experience= exp;
+    }
+    
+    public void SetUpdatePoints(int points)
+    {
+        updatePoints = points;
     }
 
     private States State
@@ -26,20 +58,28 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     {
         RaptorAnimator = GetComponentInChildren<Animator>();
 
-        m_lives = 200;
-        m_speed = 10;
+        maxExperience = 100;
+        m_lives = PlayerPrefs.GetFloat("lives");
+        m_speed = PlayerPrefs.GetFloat("speed"); ;
         m_jumpForce = 120;
         m_radiusCheckGround = 0.4f;
         m_rb.mass = 5;
-        m_startTimeBtwJump = 0.1f;
+        m_startTimeBtwJump = 0.2f;
         m_startLives = m_lives;
         m_smookeSize = 1.8f;
 
-        m_damage = 10;
+        m_damage = PlayerPrefs.GetFloat("attack"); ;
         m_timeBtwAttack = 0;
         m_startTimeBtwAttack = 0.5f;
 
         m_healthBar.SetMaxHealth(m_lives);
+
+        experienceBar.SetMaxExperience(maxExperience);
+        experienceBar.UploadDataToRaptor(this);
+        experienceBar.ShowExperience(this);
+        experienceBar.ShowUpdatePoints(updatePoints);
+
+        level = PlayerPrefs.GetInt("levelRaptor");
 
         m_matHeal = Resources.Load("Material/HealBlink", typeof(Material)) as Material;
     }
@@ -85,9 +125,9 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
                     State = States.Idle;
                 }
             }
-            if (!IsGrounded)
+            else
             {
-                if (m_previousPosition.y + 0.1f < m_rb.position.y)
+                if (m_previousPosition.y + 0.09f < m_rb.position.y)
                 {
                     State = States.Jump;
                 }
@@ -103,7 +143,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
     protected override void CheckGround()
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y - 0.1f), m_radiusCheckGround);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + 0.1f), m_radiusCheckGround);
         IsGrounded = collider.Length > 2;
     }
 
@@ -113,20 +153,24 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
         GetSpriteRenderer().material = GetMatBlink();
 
-        if (GetLives() <= 0)
+        if (m_lives <= 0)
         {
-            //m_healthBar.DeleteHealthBar();
             Die();
-            m_diePanel.gameObject.SetActive(true);
-            //m_lives = 200;
-            //m_rb.position = m_spawnPosition.position;
         }
         else
         {
-            Invoke("ResetDamageMaterial", 0.2f);
+            Invoke("ResetDamageMaterial", 0.2f);    
         }
-
+        
         m_healthBar.ShowHealth(this);
+    }
+
+    protected override void ExitFromTheCard()
+    {
+        if (m_rb.position.y < -20)
+        {
+            Die();
+        }
     }
 
     public void AddHeatPoint(float hp)
@@ -142,6 +186,23 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         m_healthBar.ShowHealth(this);
         m_spriteRenderer.material = m_matHeal;
         Invoke("ResetHealMaterial", 0.2f);
+    }    
+    
+    public void AddExperience(float exp)
+    {
+        if (experience + exp >= maxExperience)
+        {
+            experience=(int)(experience+exp)%(int)maxExperience;
+            updatePoints +=1+ (int)(experience + exp) / (int)maxExperience;
+            experienceBar.ShowUpdatePoints(updatePoints);
+            level++;
+        }
+        else
+        {
+            experience+=exp;
+        }
+        experienceBar.ShowExperience(this);
+        experienceBar.SaveExperience(updatePoints, experience);
     }
 
     public void ResetHealMaterial()
@@ -161,12 +222,21 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         this.AttackOneUnit(this);
     }
 
+    public override void Die()
+    {
+        m_lives = 0;
+        m_healthBar.ShowHealth(this);
+        PlayerPrefs.SetInt("levelRaptor",level);
+        base.Die();
+        m_diePanel.gameObject.SetActive(true);
+    }
+
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(m_attackPosition.position, m_attackRange);
 
         Gizmos.color = Color.gray;
-        Gizmos.DrawWireSphere(new Vector2(m_rb.position.x, m_rb.position.y - 0.1f), 0.3f);
+        Gizmos.DrawWireSphere(new Vector2(m_rb.position.x, m_rb.position.y + 0.25f), m_radiusCheckGround);
     }
 }

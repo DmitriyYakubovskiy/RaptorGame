@@ -14,7 +14,6 @@ public class Scenes : MonoBehaviour
     {
         m_indexScene = (SceneManager.GetActiveScene().buildIndex);
         ChangeScenes(0);
-        
     }
 
     public void NextScene()

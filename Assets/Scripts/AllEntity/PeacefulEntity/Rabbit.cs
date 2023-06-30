@@ -16,6 +16,8 @@ public class Rabbit : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefu
 
         System.Random rand = new System.Random();
 
+        experience = 1;
+
         m_lives = 10;
         m_startLives = m_lives;
         m_speed = rand.Next(250, 350) / 100f;
@@ -79,5 +81,6 @@ public class Rabbit : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefu
     private void OnDestroy()
     {
         CounterEntity.DeleteEntity();
+        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }

@@ -16,6 +16,8 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
 
         System.Random rand = new System.Random();
 
+        experience = 150;
+
         m_lives = 150;
         m_startLives = m_lives;
         m_speed = 7;
@@ -101,5 +103,7 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
     {
         CounterEntity.DeleteAgressiveEntity();
         CounterEntity.DeleteEntity();
+
+        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }
