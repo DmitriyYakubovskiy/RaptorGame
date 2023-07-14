@@ -26,6 +26,7 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
         m_radiusCheckGround = 0.27f;
         m_rb.mass = 5;
         m_smookeSize = 1.8f;
+        knockback = 30;
 
         m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator = GetComponentInChildren<Animator>();
@@ -47,7 +48,7 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
     {
         if ((this as IEntityAttack).CheckUnit(m_attackPosition,m_attackRange,m_enemies))
         {
-            this.AttackOneUnit(this);
+            this.AttackOneUnit(this,IsFlip == true ? -1 : 1, knockback);
         }
          (this as IEntityAttack).RechargeTimeAttack(m_timeBtwAttack);
         CheckGround();
@@ -101,9 +102,11 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
 
     private void OnDestroy()
     {
+        if (m_lives <= 0)
+        {
+            m_raptor.GetComponent<Raptor>().AddExperience(experience);
+        }
         CounterEntity.DeleteAgressiveEntity();
         CounterEntity.DeleteEntity();
-
-        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }

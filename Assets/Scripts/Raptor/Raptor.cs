@@ -68,6 +68,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         m_startLives = m_lives;
         m_smookeSize = 1.8f;
 
+        knockback = 50;
         m_damage = PlayerPrefs.GetFloat("attack"); ;
         m_timeBtwAttack = 0;
         m_startTimeBtwAttack = 0.5f;
@@ -80,7 +81,10 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         experienceBar.ShowUpdatePoints(updatePoints);
 
         level = PlayerPrefs.GetInt("levelRaptor");
-
+        if (level == 0)
+        {
+            level = 1;
+        }
         m_matHeal = Resources.Load("Material/HealBlink", typeof(Material)) as Material;
     }
 
@@ -143,7 +147,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
     protected override void CheckGround()
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + 0.1f), m_radiusCheckGround);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + 0.025f), m_radiusCheckGround);
         IsGrounded = collider.Length > 2;
     }
 
@@ -163,14 +167,6 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         }
         
         m_healthBar.ShowHealth(this);
-    }
-
-    protected override void ExitFromTheCard()
-    {
-        if (m_rb.position.y < -20)
-        {
-            Die();
-        }
     }
 
     public void AddHeatPoint(float hp)
@@ -195,7 +191,8 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
             experience=(int)(experience+exp)%(int)maxExperience;
             updatePoints +=1+ (int)(experience + exp) / (int)maxExperience;
             experienceBar.ShowUpdatePoints(updatePoints);
-            level++;
+            level+= 1 + (int)(experience + exp) / (int)maxExperience;
+            PlayerPrefs.SetInt("levelRaptor", level);
         }
         else
         {
@@ -219,14 +216,13 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     }
     public void Attack()
     {
-        this.AttackOneUnit(this);
+        this.AttackOneUnit(this,IsFlip==true?-1:1, knockback);
     }
 
     public override void Die()
     {
         m_lives = 0;
         m_healthBar.ShowHealth(this);
-        PlayerPrefs.SetInt("levelRaptor",level);
         base.Die();
         m_diePanel.gameObject.SetActive(true);
     }

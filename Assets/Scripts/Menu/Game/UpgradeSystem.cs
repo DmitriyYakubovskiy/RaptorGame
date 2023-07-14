@@ -1,26 +1,32 @@
 using TMPro;
 using UnityEngine;
 
-public class UpdateSystem : MonoBehaviour
+public class UpgradeSystem : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI textLives;
     [SerializeField] private TextMeshProUGUI textAttack;
     [SerializeField] private TextMeshProUGUI textSpeed;
-    [SerializeField] private TextMeshProUGUI textUpdatePoints;
+    [SerializeField] private TextMeshProUGUI textKnockback;
+
+    [SerializeField] private TextMeshProUGUI textUpgradePoints;
     [SerializeField] private TextMeshProUGUI textLevel;
 
-    private int updatePoints;
+    private int upgradePoints;
     private int level;
-    
+
+    private int knockback;
     private float lives;
     private float attack;
     private float speed;
 
     public void Awake()
     {
-        updatePoints = PlayerPrefs.GetInt("updatePoints");
+        upgradePoints = PlayerPrefs.GetInt("upgradePoints");
         level = PlayerPrefs.GetInt("levelRaptor");
-
+        if (level== 0)
+        {
+            level = 1;
+        }
         if (PlayerPrefs.GetFloat("lives") >= 50 && PlayerPrefs.GetFloat("lives") <= 6000)
         {
             lives = PlayerPrefs.GetFloat("lives");
@@ -48,6 +54,44 @@ public class UpdateSystem : MonoBehaviour
             attack = 5;
         }
 
+        if (PlayerPrefs.GetInt("knockback") >= 5 && PlayerPrefs.GetInt("knockback") <= 1001)
+        {
+            knockback = PlayerPrefs.GetInt("knockback");
+        }
+        else
+        {
+            knockback = 5;
+        }
+
+        Save();
+        ShowText();
+    }
+
+    public void ResetPoints()
+    {
+        while (lives > 50)
+        {
+            lives-=10;
+            upgradePoints++;
+        }
+
+        while (speed > 8)
+        {
+            speed--;
+            upgradePoints++;
+        }
+
+        while (attack > 5)
+        {
+            attack--;
+            upgradePoints++;
+        }
+
+        while (knockback > 5)
+        {
+            knockback--;
+            upgradePoints++;
+        }
         Save();
         ShowText();
     }
@@ -57,17 +101,19 @@ public class UpdateSystem : MonoBehaviour
         textLives.text = $"Lives: {lives}";
         textAttack.text = $"Attack: {attack}";
         textSpeed.text = $"Speed: {speed}";
-        textUpdatePoints.text = $"Update Points: {updatePoints}";
+        textKnockback.text = $"Knockback: {knockback}";
+
+        textUpgradePoints.text = $"Upgrade Points: {upgradePoints}";
         textLevel.text = $"Level: {level}";
     }
 
     public void AddLives()
     {
-        if(updatePoints > 0 && lives <5000)
+        if(upgradePoints > 0 && lives <5000)
         {
             //lives = (int)(lives * 1.1f);
             lives += 10;
-            updatePoints--;
+            upgradePoints--;
         }
         Save();
         ShowText();
@@ -75,11 +121,11 @@ public class UpdateSystem : MonoBehaviour
 
     public void AddAttack()
     {
-        if (updatePoints > 0 && attack < 1000)
+        if (upgradePoints > 0 && attack < 1000)
         {
             //attack = (int)attack * 1.1f;
             attack += 1;
-            updatePoints--;
+            upgradePoints--;
         }
         Save();
         ShowText();
@@ -87,11 +133,22 @@ public class UpdateSystem : MonoBehaviour
 
     public void AddSpeed()
     {
-        if (updatePoints > 0 && speed<=13)
+        if (upgradePoints > 0 && speed<=13)
         {
             //speed = (int)speed * 1.1f;
             speed += 1;
-            updatePoints--;
+            upgradePoints--;
+        }
+        Save();
+        ShowText();
+    }
+
+    public void AddKnockback()
+    {
+        if (upgradePoints > 0 && knockback <= 1000)
+        {
+            knockback += 1;
+            upgradePoints--;
         }
         Save();
         ShowText();
@@ -102,6 +159,7 @@ public class UpdateSystem : MonoBehaviour
         PlayerPrefs.SetFloat("lives", lives);
         PlayerPrefs.SetFloat("attack", attack);
         PlayerPrefs.SetFloat("speed", speed);
-        PlayerPrefs.SetInt("updatePoints", updatePoints);
+        PlayerPrefs.SetInt("knockback", knockback);
+        PlayerPrefs.SetInt("upgradePoints", upgradePoints);
     }
 }

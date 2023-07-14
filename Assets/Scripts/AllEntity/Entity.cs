@@ -7,6 +7,7 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
     [SerializeField] protected float m_jumpForce;
     [SerializeField] protected float m_attackRange;
     [SerializeField] protected float m_damage;
+    [SerializeField] protected int knockback;
 
     [SerializeField] protected float m_timeBtwAttack;
     [SerializeField] protected float m_startTimeBtwAttack;
@@ -38,6 +39,8 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
     public bool IsGrounded { get; set; }
     public bool IsFlip { get; set; }
     public bool IsJumped { get; set; }
+
+    public bool isMoved { get; set; }
 
     public Entity SetLives(float lives)
     {
@@ -154,6 +157,7 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
     protected virtual void Awake()
     {
         IsGrounded = true;
+        isMoved= true;
 
         m_rb = GetComponent<Rigidbody2D>();
         m_transform = GetComponent<Transform>();
@@ -217,6 +221,22 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
     protected void ResetDamageMaterial()
     {
         m_spriteRenderer.material = m_matDefault;
+    }
+
+    public virtual void StopMove(float time)
+    {
+        isMoved= false;
+        Invoke("ReturnMove", time);
+    }
+
+    protected virtual void ReturnMove()
+    {
+        isMoved = true;
+    }
+
+    protected virtual void KnockBack()
+    {
+
     }
 
     public virtual void Die()

@@ -80,7 +80,10 @@ public class Rabbit : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefu
 
     private void OnDestroy()
     {
+        if (m_lives <= 0)
+        {
+            m_raptor.GetComponent<Raptor>().AddExperience(experience);
+        }
         CounterEntity.DeleteEntity();
-        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }

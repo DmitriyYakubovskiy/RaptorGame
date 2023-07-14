@@ -25,6 +25,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         m_radiusCheckGround = 0.18f;
         m_rb.mass = 4;
         m_smookeSize = 1.2f;
+        knockback = 15;
 
         m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator = GetComponentInChildren<Animator>();
@@ -46,7 +47,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
     {
         if ((this as IEntityAttack).CheckUnit(m_attackPosition, m_attackRange, m_enemies))
         {
-            this.AttackOneUnit(this);
+            this.AttackOneUnit(this,IsFlip==true? -1 : 1, knockback);
         }
         (this as IEntityAttack).RechargeTimeAttack(m_timeBtwAttack);
         CheckGround();
@@ -85,8 +86,11 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
 
     private void OnDestroy()
     {
+        if (m_lives <= 0)
+        {
+            m_raptor.GetComponent<Raptor>().AddExperience(experience);
+        }
         CounterEntity.DeleteAgressiveEntity();
         CounterEntity.DeleteEntity();
-        m_raptor.GetComponent<Raptor>().AddExperience(experience);
     }
 }

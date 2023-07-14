@@ -10,7 +10,7 @@ public class ExperienceBar : MonoBehaviour
     private float m_maxExperience;
     private float m_fill;
     private float experience;
-    private int updatePoints;
+    private int upgradePoints;
 
     public float SetMaxExperience(float maxExp)
     {
@@ -24,7 +24,7 @@ public class ExperienceBar : MonoBehaviour
 
     public void Awake()
     {
-        updatePoints =PlayerPrefs.GetInt("updatePoints");
+        upgradePoints =PlayerPrefs.GetInt("upgradePoints");
         experience = PlayerPrefs.GetFloat("experience");
         m_fill = 0f;
     }
@@ -45,13 +45,13 @@ public class ExperienceBar : MonoBehaviour
 
     public void SaveExperience(int up,float exp)
     {
-        PlayerPrefs.SetInt("updatePoints", up);
+        PlayerPrefs.SetInt("upgradePoints", up);
         PlayerPrefs.SetFloat("experience", exp);
     }
 
     public void UploadDataToRaptor(Raptor raptor)
     {
         raptor.SetExperience(experience);
-        raptor.SetUpdatePoints(updatePoints);
+        raptor.SetUpdatePoints(upgradePoints);
     }
 }

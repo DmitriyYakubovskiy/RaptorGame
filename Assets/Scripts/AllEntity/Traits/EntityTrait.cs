@@ -8,17 +8,19 @@ namespace Assets.Scripts.AllEntity
     {
         public static void Move(this ITrait<CanMove> trait, Entity entity)
         {
-
-            if (entity.GetMoveVector().x < 0)
+            if (entity.isMoved)
             {
-                entity.SetFlip(true);
-            }
-            else if (entity.GetMoveVector().x != 0)
-            {
-                entity.SetFlip(false);
-            }
+                if (entity.GetMoveVector().x < 0)
+                {
+                    entity.SetFlip(true);
+                }
+                else if (entity.GetMoveVector().x != 0)
+                {
+                    entity.SetFlip(false);
+                }
 
-            entity.GetRigidbody().velocity = new Vector2(entity.GetMoveVector().x * entity.GetSpeed(), entity.GetRigidbody().velocity.y);
+                entity.GetRigidbody().velocity = new Vector2(entity.GetMoveVector().x * entity.GetSpeed(), entity.GetRigidbody().velocity.y);
+            }
         }
 
         public static void Jump(this ITrait<CanJump> trait, Entity entity)
@@ -91,7 +93,7 @@ namespace Assets.Scripts.AllEntity
             }
         }
 
-        public static void AttackOneUnit(this ITrait<CanAttackOneUnit> trait, IEntityAttack entity)
+        public static void AttackOneUnit(this ITrait<CanAttackOneUnit> trait, IEntityAttack entity,int vector,int knockback)
         {
             if (entity.GetTimeBtwAttack() <= 0)
             {
@@ -99,6 +101,8 @@ namespace Assets.Scripts.AllEntity
                 if (enemiesToDamage.Length > 0)
                 {
                     enemiesToDamage[0].GetComponent<Entity>().DealDamage(entity.GetDamage());
+                    enemiesToDamage[0].GetComponent<Entity>().StopMove(knockback/100+0.2f);
+                    enemiesToDamage[0].GetComponent<Entity>().GetRigidbody().AddForce(new Vector2(knockback * vector, knockback), ForceMode2D.Impulse);
                 }
                 entity.SetTimeBtwAttack(entity.GetStartTimeBtwAttack());
             }
