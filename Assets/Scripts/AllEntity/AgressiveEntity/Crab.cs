@@ -25,7 +25,7 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         m_radiusCheckGround = 0.18f;
         m_rb.mass = 4;
         m_smookeSize = 1.2f;
-        knockback = 15;
+       
 
         m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
         m_animator = GetComponentInChildren<Animator>();
@@ -35,7 +35,8 @@ public class Crab : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<CanAgress
         m_YCheckPlayer = 3;
         m_timeStartCheckPlayer = 0.6f;
         IsJumped = false;
-
+        
+        knockback = 15;
         m_damage = 7f;
         m_startTimeBtwAttack = 2f;
         

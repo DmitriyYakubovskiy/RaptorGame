@@ -54,13 +54,13 @@ public class UpgradeSystem : MonoBehaviour
             attack = 5;
         }
 
-        if (PlayerPrefs.GetInt("knockback") >= 5 && PlayerPrefs.GetInt("knockback") <= 1001)
+        if (PlayerPrefs.GetInt("knockback") >= 10 && PlayerPrefs.GetInt("knockback") <= 1001)
         {
             knockback = PlayerPrefs.GetInt("knockback");
         }
         else
         {
-            knockback = 5;
+            knockback = 10;
         }
 
         Save();
@@ -87,7 +87,7 @@ public class UpgradeSystem : MonoBehaviour
             upgradePoints++;
         }
 
-        while (knockback > 5)
+        while (knockback > 10)
         {
             knockback--;
             upgradePoints++;

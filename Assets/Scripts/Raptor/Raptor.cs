@@ -68,7 +68,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         m_startLives = m_lives;
         m_smookeSize = 1.8f;
 
-        knockback = 50;
+        knockback = PlayerPrefs.GetInt("knockback");
         m_damage = PlayerPrefs.GetFloat("attack"); ;
         m_timeBtwAttack = 0;
         m_startTimeBtwAttack = 0.5f;
@@ -188,18 +188,19 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     {
         if (experience + exp >= maxExperience)
         {
-            experience=(int)(experience+exp)%(int)maxExperience;
+            experience = (int)(experience + exp) % (int)maxExperience;
             updatePoints +=1+ (int)(experience + exp) / (int)maxExperience;
             experienceBar.ShowUpdatePoints(updatePoints);
             level+= 1 + (int)(experience + exp) / (int)maxExperience;
             PlayerPrefs.SetInt("levelRaptor", level);
         }
-        else
+        else 
         {
-            experience+=exp;
+            experience += exp;
         }
         experienceBar.ShowExperience(this);
         experienceBar.SaveExperience(updatePoints, experience);
+
     }
 
     public void ResetHealMaterial()

@@ -29,13 +29,36 @@ public class ExperienceBar : MonoBehaviour
         m_fill = 0f;
     }
 
+    public void FixedUpdate()
+    {
+        if (m_greenLine.GetComponent<Image>().fillAmount >= 1)
+        {
+            m_greenLine.GetComponent<Image>().fillAmount = 0;
+        }
+        if (m_greenLine.GetComponent<Image>().fillAmount != m_fill)
+        {
+            Invoke("SmoothAddExperience", 0.1f);
+        }
+    }
+
+    public void SmoothAddExperience()
+    {
+        if(m_greenLine.GetComponent<Image>().fillAmount <= m_fill + 0.01f && m_greenLine.GetComponent<Image>().fillAmount >= m_fill - 0.01f)
+        {
+            m_greenLine.GetComponent<Image>().fillAmount = m_fill;
+        }
+        else 
+        {
+            m_greenLine.GetComponent<Image>().fillAmount += 0.01f;
+        }
+    }
+
     public void ShowExperience(Raptor raptor)
     {
         if (raptor != null)
         {
             m_fill = raptor.GetExperience() / m_maxExperience;
         }
-        m_greenLine.GetComponent<Image>().fillAmount = m_fill;
     }
 
     public void ShowUpdatePoints(int up)
