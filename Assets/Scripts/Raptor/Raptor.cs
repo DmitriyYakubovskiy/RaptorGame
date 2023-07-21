@@ -77,7 +77,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
         experienceBar.SetMaxExperience(maxExperience);
         experienceBar.UploadDataToRaptor(this);
-        experienceBar.ShowExperience(this);
+        experienceBar.ShowExperience(this,0);
         experienceBar.ShowUpdatePoints(updatePoints);
 
         level = PlayerPrefs.GetInt("levelRaptor");
@@ -147,7 +147,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
     protected override void CheckGround()
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + 0.025f), m_radiusCheckGround);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + 0.025f), m_radiusCheckGround, ground);
         IsGrounded = collider.Length > 2;
     }
 
@@ -185,11 +185,12 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     }    
     
     public void AddExperience(float exp)
-    {
+    {            
+        int buf=(int)(experience + exp) / (int)maxExperience;
         if (experience + exp >= maxExperience)
         {
+            updatePoints += buf;
             experience = (int)(experience + exp) % (int)maxExperience;
-            updatePoints +=1+ (int)(experience + exp) / (int)maxExperience;
             experienceBar.ShowUpdatePoints(updatePoints);
             level+= 1 + (int)(experience + exp) / (int)maxExperience;
             PlayerPrefs.SetInt("levelRaptor", level);
@@ -198,9 +199,8 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         {
             experience += exp;
         }
-        experienceBar.ShowExperience(this);
+        experienceBar.ShowExperience(this, buf);
         experienceBar.SaveExperience(updatePoints, experience);
-
     }
 
     public void ResetHealMaterial()

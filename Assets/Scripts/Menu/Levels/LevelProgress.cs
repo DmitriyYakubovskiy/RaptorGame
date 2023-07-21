@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class LevelProgress : MonoBehaviour
 {
-    public static bool[] m_levels = new bool[3];
+    public static bool[] m_levels = new bool[4];
     [SerializeField] private Button[] m_buttons;
     [SerializeField] private Scenes m_scene;
 

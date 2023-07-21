@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,8 @@ public class ExperienceBar : MonoBehaviour
     private float m_fill;
     private float experience;
     private int upgradePoints;
+
+    private int cnt = 0;
 
     public float SetMaxExperience(float maxExp)
     {
@@ -50,15 +53,27 @@ public class ExperienceBar : MonoBehaviour
         else 
         {
             m_greenLine.GetComponent<Image>().fillAmount += 0.01f;
+            cnt += 1;
+        }
+
+        if (cnt >= 100)
+        {
+            m_fill -= 1;
+            cnt= 0;
         }
     }
 
-    public void ShowExperience(Raptor raptor)
+    public void ShowExperience(Raptor raptor,int cycles)
     {
         if (raptor != null)
         {
             m_fill = raptor.GetExperience() / m_maxExperience;
         }
+
+        m_fill = cycles>=2?m_fill+cycles:m_fill;
+        cnt = 0;
+
+        Debug.Log($"{m_fill}");
     }
 
     public void ShowUpdatePoints(int up)

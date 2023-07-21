@@ -16,15 +16,15 @@ public class Rabbit : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefu
 
         System.Random rand = new System.Random();
 
-        experience = 1;
+        experience = 2;
 
         m_lives = 10;
         m_startLives = m_lives;
-        m_speed = rand.Next(250, 350) / 100f;
+        m_speed = rand.Next(300, 350) / 100f;
         m_jumpForce = 16;
         m_jumpForceStart = m_jumpForce;
         m_radiusCheckGround = 0.06f;
-        m_rb.mass = 1;
+        m_rb.mass = 2;
         m_smookeSize = 1;
 
         m_sizeCheckingWall = new Vector2(0.3f, 0.09f);
@@ -47,7 +47,7 @@ public class Rabbit : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefu
         CheckGround();
         this.PeacefulLogics(this);
         this.Move(this);
-        ExitFromTheCard();
+        //ExitFromTheCard();
     }
 
     private void FixedUpdate()

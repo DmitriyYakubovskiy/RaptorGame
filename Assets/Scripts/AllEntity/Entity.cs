@@ -36,6 +36,8 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
     private UnityEngine.Object m_explosion;
 
     [SerializeField] protected LayerMask m_enemies;
+    [SerializeField] protected LayerMask ground;
+
     public bool IsGrounded { get; set; }
     public bool IsFlip { get; set; }
     public bool IsJumped { get; set; }
@@ -180,7 +182,7 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
 
     protected virtual void CheckGround()
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + m_radiusCheckGround / 2), m_radiusCheckGround + 0.2f);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + m_radiusCheckGround / 2), m_radiusCheckGround + 0.2f,ground);
         IsGrounded = collider.Length > 2;
     }
 
@@ -212,9 +214,9 @@ public abstract class Entity : MonoBehaviour, IEntityAttack
 
     protected virtual void ExitFromTheCard()
     {
-        if (m_rb.position.y < -20)
+        if (m_rb.position.y < -50)
         {
-            Die();
+            DealDamage(m_lives + 1);
         }
     }
 

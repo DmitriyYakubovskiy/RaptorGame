@@ -15,7 +15,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
     {
         SearchRaptor();
 
-        experience = 3;
+        experience = 4;
 
         m_lives = 20;
         m_startLives = m_lives;
@@ -23,7 +23,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         m_jumpForce = 36;
         m_jumpForceStart = m_jumpForce;
         m_radiusCheckGround =0.06f;
-        m_rb.mass = 2;
+        m_rb.mass = 2.5f;
         m_smookeSize = 1;
 
         m_sizeCheckingWall = new Vector2(0.4f, 0.09f);
@@ -46,7 +46,7 @@ public class Fox : AIEntity,ITrait<CanJump>,ITrait<CanMove>,ITrait<CanPeacefulLo
         CheckGround();
         this.PeacefulLogics(this);
         this.Move(this);
-        ExitFromTheCard();
+       // ExitFromTheCard();
     }
 
     private void FixedUpdate()

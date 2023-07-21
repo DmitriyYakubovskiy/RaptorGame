@@ -38,7 +38,6 @@ public class JumpBuster : MonoBehaviour
             {
                 if (m_tagEntity == entity[i].gameObject.tag)
                 {
-                    Debug.Log(22222222222);
                     entity[i].GetComponent<AIEntity>().SetJumpForce(entity[i].GetComponent<AIEntity>().GetJumpForce() * m_boost);
                 }
             }

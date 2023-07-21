@@ -74,12 +74,16 @@ MonoBehaviour:
   m_jumpForce: 0
   m_attackRange: 0
   m_damage: 0
+  knockback: 0
   m_timeBtwAttack: 0
   m_startTimeBtwAttack: 0
   m_attackPosition: {fileID: 8145585116694720994}
   m_enemies:
     serializedVersion: 2
     m_Bits: 0
+  ground:
+    serializedVersion: 2
+    m_Bits: 448
   m_MaskWall:
     serializedVersion: 2
     m_Bits: 448

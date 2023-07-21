@@ -14,9 +14,7 @@ public class RaptorEnemy : AIEntity, ITrait<CanJump>, ITrait<CanMove>, ITrait<Ca
     {
         SearchRaptor();
 
-        System.Random rand = new System.Random();
-
-        experience = 150;
+        experience = 200;
 
         m_lives = 150;
         m_startLives = m_lives;
