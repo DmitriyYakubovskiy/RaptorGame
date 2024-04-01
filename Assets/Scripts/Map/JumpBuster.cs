@@ -38,7 +38,7 @@ public class JumpBuster : MonoBehaviour
             {
                 if (m_tagEntity == entity[i].gameObject.tag)
                 {
-                    entity[i].GetComponent<AIEntity>().SetJumpForce(entity[i].GetComponent<AIEntity>().GetJumpForce() * m_boost);
+                    entity[i].GetComponent<AIEntity>().JumpForce=entity[i].GetComponent<AIEntity>().JumpForce * m_boost;
                 }
             }
         }
@@ -52,7 +52,7 @@ public class JumpBuster : MonoBehaviour
             {
                 if (m_colider[i].gameObject != null)
                 {
-                    m_colider[i].GetComponent<AIEntity>().SetJumpForce(m_colider[i].GetComponent<AIEntity>().GetJumpForceStart());
+                    m_colider[i].GetComponent<AIEntity>().JumpForce=m_colider[i].GetComponent<AIEntity>().JumpForceStart;
                 }
             }
         }

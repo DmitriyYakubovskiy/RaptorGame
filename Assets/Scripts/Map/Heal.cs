@@ -11,10 +11,10 @@ public class Heal : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Raptor")
+        if (collision.gameObject.name == "Raptor" && collision.isTrigger==false)
         {
             var raptor = collision.GetComponent<Raptor>();
-            if (raptor.GetHealthBar().GetMaxHealth()!=raptor.GetLives())
+            if (raptor.GetHealthBar().GetMaxHealth()!=raptor.Lives)
             {
                 raptor.AddHeatPoint(m_heatPoint);
                 Destroy(this.gameObject);

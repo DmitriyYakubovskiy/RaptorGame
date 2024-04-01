@@ -50,7 +50,7 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Raptor")
+        if (collision.gameObject.name == "Raptor" && collision.isTrigger == false)
         {
             if (CounterEntity.GetCountAgressiveEntity() <= 0)
             {
@@ -62,7 +62,7 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Raptor")
+        if (collision.gameObject.name == "Raptor" && collision.isTrigger == false)
         {
             m_time = m_startTime;
             m_isInside = false;

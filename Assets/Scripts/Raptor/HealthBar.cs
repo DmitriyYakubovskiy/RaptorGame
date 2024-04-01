@@ -5,17 +5,17 @@ public class HealthBar : MonoBehaviour
 {
     [SerializeField] private RectTransform m_redLine;
     [SerializeField] private GameObject m_HealthBar;
-    private float m_maxHealth;
+    private float maxHealth;
     private float m_fill;
 
     public float SetMaxHealth(float maxHealth)
     {
-        return m_maxHealth = maxHealth;
+        return this.maxHealth = maxHealth;
     }
 
     public float GetMaxHealth()
     {
-        return m_maxHealth;
+        return maxHealth;
     }
 
     public void Awake()
@@ -51,9 +51,9 @@ public class HealthBar : MonoBehaviour
 
     public void ShowHealth(Raptor raptor)
     {
-        if (raptor.GetLives() >= 0 && raptor != null)
+        if (raptor.Lives >= 0 && raptor != null)
         {
-            m_fill = raptor.GetLives() / m_maxHealth;
+            m_fill = raptor.Lives / maxHealth;
         }
     }
 

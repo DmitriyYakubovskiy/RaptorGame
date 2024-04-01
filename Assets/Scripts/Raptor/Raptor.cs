@@ -1,9 +1,8 @@
-using Assets.Scripts.AllEntity;
-using Assets.Scripts.AllEntity.Traits;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttackOneUnit>
+public class Raptor : Entity
 {
     [SerializeField] private HealthBar m_healthBar;
     [SerializeField] private FixedJoystick m_fixedJoystick;
@@ -32,12 +31,6 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     {
         return experience;
     }
-
-    public int GetUpdatePoints()
-    {
-        return updatePoints;
-    }
-
     public void SetExperience(float exp)
     {
         experience= exp;
@@ -59,21 +52,21 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
         RaptorAnimator = GetComponentInChildren<Animator>();
 
         maxExperience = 100;
-        m_lives = PlayerPrefs.GetFloat("lives");
-        m_speed = PlayerPrefs.GetFloat("speed"); ;
-        m_jumpForce = 120;
-        m_radiusCheckGround = 0.4f;
-        m_rb.mass = 5;
-        m_startTimeBtwJump = 0.2f;
-        m_startLives = m_lives;
-        m_smookeSize = 1.8f;
+        Lives = PlayerPrefs.GetFloat("lives");
+        Speed = PlayerPrefs.GetFloat("speed"); ;
+        JumpForce = 90;
+        RadiusCheckGround = 0.4f;
+        rigidbody.mass = 3.75f;
+        StartTimeBtwJump = 0.2f;
+        startLives = Lives;
+        SmookeSize = 1.8f;
 
-        knockback = PlayerPrefs.GetInt("knockback");
-        m_damage = PlayerPrefs.GetFloat("attack"); ;
-        m_timeBtwAttack = 0;
-        m_startTimeBtwAttack = 0.5f;
+        Knockback = PlayerPrefs.GetInt("knockback");
+        Damage = PlayerPrefs.GetFloat("attack"); ;
+        timeBtwAttack = 0;
+        startTimeBtwAttack = 0.5f;
 
-        m_healthBar.SetMaxHealth(m_lives);
+        m_healthBar.SetMaxHealth(Lives);
 
         experienceBar.SetMaxExperience(maxExperience);
         experienceBar.UploadDataToRaptor(this);
@@ -92,12 +85,12 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     {
         if (Math.Abs(m_fixedJoystick.Horizontal) >= 0.1f)
         {
-            SetMoveVector(m_fixedJoystick.Horizontal, 0);
-            this.Move(this);
+            moveVector=new Vector2(m_fixedJoystick.Horizontal, 0);
+            Move();
         }
 
         RechargeTimeJump();
-        (this as IEntityAttack).RechargeTimeAttack(m_timeBtwAttack);
+        RechargeTimeAttack();
         ExitFromTheCard();
     }
 
@@ -105,13 +98,13 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
     {
         if (IsJumped)
         {
-            this.Jump(this);
+            Jump();
             IsJumped = false;
-            m_timeBtwJump = m_startTimeBtwJump;
+            TimeBtwJump = StartTimeBtwJump;
         }
 
         RaptorAnimator.speed = 1;
-        if (m_timeBtwAttack > 0.2)
+        if (timeBtwAttack > 0.2)
         {
             State = States.Attack;
         }
@@ -131,7 +124,7 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
             }
             else
             {
-                if (m_previousPosition.y + 0.09f < m_rb.position.y)
+                if (previousPosition.y + 0.09f < rigidbody.position.y)
                 {
                     State = States.Jump;
                 }
@@ -141,23 +134,24 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
                 }
             }
         }
+
         CheckGround();
-        m_previousPosition = new Vector2(m_rb.position.x, m_rb.position.y);
+        previousPosition = new Vector2(rigidbody.position.x, rigidbody.position.y);
     }
 
     protected override void CheckGround()
     {
-        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(m_rb.position.x, m_rb.position.y + 0.025f), m_radiusCheckGround, ground);
+        Collider2D[] collider = Physics2D.OverlapCircleAll(new Vector2(rigidbody.position.x, rigidbody.position.y + 0.025f), RadiusCheckGround, ground);
         IsGrounded = collider.Length > 2;
     }
 
     public override void DealDamage(float damage)
     {
-        m_lives = m_lives - damage;
+        Lives = Lives - damage;
 
-        GetSpriteRenderer().material = GetMatBlink();
+        spriteRenderer.material = matBlink;
 
-        if (m_lives <= 0)
+        if (Lives <= 0)
         {
             Die();
         }
@@ -171,16 +165,16 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
     public void AddHeatPoint(float hp)
     {
-        if (m_lives + hp > m_healthBar.GetMaxHealth())
+        if (Lives + hp > m_healthBar.GetMaxHealth())
         {
-            m_lives=m_healthBar.GetMaxHealth();
+            Lives=m_healthBar.GetMaxHealth();
         }
         else
         {
-            m_lives+=hp;
+            Lives+=hp;
         }
         m_healthBar.ShowHealth(this);
-        m_spriteRenderer.material = m_matHeal;
+        spriteRenderer.material = m_matHeal;
         Invoke("ResetHealMaterial", 0.2f);
     }    
     
@@ -205,35 +199,48 @@ public class Raptor : Entity, ITrait<CanMove>, ITrait<CanJump>, ITrait<CanAttack
 
     public void ResetHealMaterial()
     {
-        m_spriteRenderer.material = m_matDefault;
+        spriteRenderer.material = matDefault;
     }
 
-    public void Jump()
+    public void ClickJumpButton()
     {
         if (IsGrounded == true && RechargeTimeJump() == true)
         {
             IsJumped = true;
         }
     }
-    public void Attack()
+    public void ClickAttackButton()
     {
-        this.AttackOneUnit(this,IsFlip==true?-1:1, knockback);
+        AttackOneUnit();
     }
 
     public override void Die()
     {
-        m_lives = 0;
+        Lives = 0;
         m_healthBar.ShowHealth(this);
         base.Die();
         m_diePanel.gameObject.SetActive(true);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Enemy" && collision.isTrigger == false)
+        {
+            entitysForDamage.Add(collision);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag== "Enemy" && collision.isTrigger == false)
+        {
+            entitysForDamage.Remove(collision);
+        }
+    }
+
     void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(m_attackPosition.position, m_attackRange);
-
         Gizmos.color = Color.gray;
-        Gizmos.DrawWireSphere(new Vector2(m_rb.position.x, m_rb.position.y + 0.25f), m_radiusCheckGround);
+        Gizmos.DrawWireSphere(new Vector2(rigidbody.position.x, rigidbody.position.y + 0.25f), RadiusCheckGround);
     }
 }

@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 246336621705951453, guid: 022c20f027ae76e4982525010e95d463, type: 3}
@@ -60,6 +61,14 @@ PrefabInstance:
       value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 246336621705951458, guid: 022c20f027ae76e4982525010e95d463, type: 3}
+      propertyPath: DamageInput
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 246336621705951458, guid: 022c20f027ae76e4982525010e95d463, type: 3}
+      propertyPath: attackRange
+      value: 1.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 246336621705951458, guid: 022c20f027ae76e4982525010e95d463, type: 3}
       propertyPath: m_attackRange
       value: 0.65
       objectReference: {fileID: 0}
@@ -67,5 +76,12 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1922198620, guid: fc8b5210b554e9447a74b119675d7136, type: 3}
+    - target: {fileID: 246336622867738190, guid: 022c20f027ae76e4982525010e95d463, type: 3}
+      propertyPath: m_TagString
+      value: Sprite
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 022c20f027ae76e4982525010e95d463, type: 3}
