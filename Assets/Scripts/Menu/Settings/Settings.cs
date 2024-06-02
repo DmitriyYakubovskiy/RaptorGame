@@ -10,26 +10,25 @@ public class Settings : MonoBehaviour
 
     private void Awake()
     {
-        if (PlayerPrefs.GetInt("ShowFps") == 1)
-        {
-            m_boxFps.isOn = true;
-        }
-        else
-        {
-            m_boxFps.isOn = false;
-        } 
+        SettingsFileManager manager = new SettingsFileManager();
+        SettingsData data = manager.LoadData() as SettingsData;
+        m_boxFps.isOn = data.fpsIsOn;
     }
 
     public void ShowFps()
     {
-        if(m_boxFps.isOn)
+        SettingsFileManager manager = new SettingsFileManager();
+        SettingsData data = manager.LoadData() as SettingsData;
+        if (m_boxFps.isOn)
         {
-            PlayerPrefs.SetInt("ShowFps",1);
+            data.fpsIsOn=true;
+            manager.SaveData(data);
             m_fpsText.SetActive(true);
         }
         else 
         {
-            PlayerPrefs.SetInt("ShowFps", 0);
+            data.fpsIsOn = false;
+            manager.SaveData(data);
             m_fpsText.SetActive(false);
         }
     }

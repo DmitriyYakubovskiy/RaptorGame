@@ -1,5 +1,6 @@
 using Assets.Scripts.AllEntity;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class SpawnSystem : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class SpawnSystem : MonoBehaviour
 
     [SerializeField] private int m_maxEntity;
 
+    private float allTime = 0;
+
     private void Awake()
     {
         m_explosion = Resources.Load("Prefabs/Environment/Smoke");
@@ -23,14 +26,20 @@ public class SpawnSystem : MonoBehaviour
 
     private void Update()
     {
+        if (Mathf.FloorToInt(allTime / 60) == 1)
+        {
+            allTime = 0;
+            m_startTime *= 0.70f;
+        }
         if (RechargeTimeSpawn())
         {
             if (CounterEntity.GetCountEntity() < m_maxEntity)
             {
                 SpawnEntity();
-                m_time = (float)CounterEntity.GetCountEntity()/ m_maxEntity*m_startTime;
+                m_time = m_startTime;
             }
         }
+        allTime += Time.deltaTime;
     }
 
     private bool RechargeTimeSpawn()
@@ -43,19 +52,27 @@ public class SpawnSystem : MonoBehaviour
         return true;
     }
 
-    public void SpawnEntity()
+    private void SpawnEntity()
     {
         System.Random rand = new System.Random();
-
-        int index = rand.Next(0, m_AIEntity.GetLength(0));
+        int chance = rand.Next(1, 101);
         int positionX = rand.Next(m_beginSpawnXRange, m_endSpawnXRange);
+        int index = 0;
 
+        SpawnSmoke(positionX);
+
+        if (chance > 95) index = 3;
+        else if (chance > 85) index = 1;
+        else if (chance > 60) index = 0;
+        else index = 2;
+        GameObject entity = (GameObject)Instantiate(m_AIEntity[index]);
+        entity.transform.position = new Vector3(positionX, m_SpawnY, 0);
+    }
+
+    private void SpawnSmoke(int positionX)
+    {
         GameObject explosionRef = (GameObject)Instantiate(m_explosion);
         explosionRef.transform.position = new Vector3(positionX, m_SpawnY, 0);
         Destroy(explosionRef, 1f);
-
-        GameObject entity = (GameObject)Instantiate(m_AIEntity[index]);
-        
-        entity.transform.position = new Vector3(positionX, m_SpawnY, 0);
     }
 }

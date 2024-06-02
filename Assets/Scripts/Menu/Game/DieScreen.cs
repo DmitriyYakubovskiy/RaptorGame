@@ -4,11 +4,13 @@ using UnityEngine.SceneManagement;
 public class DieScreen : MonoBehaviour
 {
     [SerializeField] private Transform m_panel;
-    [SerializeField] private Camera cam;
+    private Camera cam;
     private float defaultFov;
 
     private void Awake()
     {
+        m_panel = GetComponent<Transform>();
+        cam = Camera.main;
         defaultFov = cam.orthographicSize;
         m_panel=GetComponent<Transform>();
     }

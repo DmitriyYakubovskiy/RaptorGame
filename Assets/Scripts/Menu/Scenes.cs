@@ -21,4 +21,9 @@ public class Scenes : MonoBehaviour
         m_indexScene = (SceneManager.GetActiveScene().buildIndex)+1;
         ChangeScenes(0);
     }
+
+    public void EndlessModeScene()
+    {
+        ChangeScenes(SceneManager.sceneCountInBuildSettings-1);
+    }
 }

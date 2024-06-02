@@ -43,8 +43,11 @@ public class Portal : MonoBehaviour
         {
             m_panel.gameObject.SetActive(true);
             m_processBar.SetActive(false);
+
+            LevelsFileManager levelsFileManager = new LevelsFileManager();
             LevelProgress.m_levels[SceneManager.GetActiveScene().buildIndex] = true;
-            PlayerPrefs.SetInt("level"+SceneManager.GetActiveScene().buildIndex.ToString(),1);
+            LevelData data = LevelData.Convert(LevelProgress.m_levels);
+            levelsFileManager.SaveData(data);
         }
     }
 

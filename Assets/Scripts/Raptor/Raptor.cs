@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Raptor : Entity
@@ -7,6 +6,8 @@ public class Raptor : Entity
     [SerializeField] private HealthBar m_healthBar;
     [SerializeField] private FixedJoystick m_fixedJoystick;
     [SerializeField] private Transform m_diePanel;
+    private RaptorFileManager fileManager;
+    private RaptorData data;
     private Material m_matHeal;
     private float experience=0;
     private float maxExperience;
@@ -49,11 +50,17 @@ public class Raptor : Entity
 
     private void Start()
     {
+        fileManager = new RaptorFileManager();
+        data= fileManager.LoadData() as RaptorData;
         RaptorAnimator = GetComponentInChildren<Animator>();
 
+        level = data.level;
+        Lives = data.lives;
+        Speed = data.speed;
+        Knockback = data.knockback;
+        Damage = data.attack;
+
         maxExperience = 100;
-        Lives = PlayerPrefs.GetFloat("lives");
-        Speed = PlayerPrefs.GetFloat("speed"); ;
         JumpForce = 90;
         RadiusCheckGround = 0.4f;
         rigidbody.mass = 3.75f;
@@ -61,8 +68,6 @@ public class Raptor : Entity
         startLives = Lives;
         SmookeSize = 1.8f;
 
-        Knockback = PlayerPrefs.GetInt("knockback");
-        Damage = PlayerPrefs.GetFloat("attack"); ;
         timeBtwAttack = 0;
         startTimeBtwAttack = 0.5f;
 
@@ -73,11 +78,6 @@ public class Raptor : Entity
         experienceBar.ShowExperience(this,0);
         experienceBar.ShowUpdatePoints(updatePoints);
 
-        level = PlayerPrefs.GetInt("levelRaptor");
-        if (level == 0)
-        {
-            level = 1;
-        }
         m_matHeal = Resources.Load("Material/HealBlink", typeof(Material)) as Material;
     }
 
@@ -88,7 +88,19 @@ public class Raptor : Entity
             moveVector=new Vector2(m_fixedJoystick.Horizontal, 0);
             Move();
         }
-
+        if(Input.GetAxis("Horizontal") != 0)
+        {
+            moveVector = new Vector2(Input.GetAxis("Horizontal"),0);
+            Move();
+        }
+        if (Input.GetMouseButton(0))
+        {
+            ClickAttackButton();
+        }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ClickJumpButton();
+        }
         RechargeTimeJump();
         RechargeTimeAttack();
         ExitFromTheCard();
@@ -116,6 +128,11 @@ public class Raptor : Entity
                 {
                     State = States.Run;
                     RaptorAnimator.speed = Math.Abs(m_fixedJoystick.Horizontal);
+                }
+                else if (Math.Abs(rigidbody.position.x-previousPosition.x)>=0.01f)
+                {
+                    State = States.Run;
+                    RaptorAnimator.speed = 1;
                 }
                 else
                 {
@@ -148,31 +165,26 @@ public class Raptor : Entity
     public override void DealDamage(float damage)
     {
         Lives = Lives - damage;
-
         spriteRenderer.material = matBlink;
 
         if (Lives <= 0)
         {
+
             Die();
         }
         else
         {
-            Invoke("ResetDamageMaterial", 0.2f);    
+            Invoke("ResetDamageMaterial", 0.2f);
+            PlaySound(0, volume);
         }
-        
         m_healthBar.ShowHealth(this);
     }
 
     public void AddHeatPoint(float hp)
     {
-        if (Lives + hp > m_healthBar.GetMaxHealth())
-        {
-            Lives=m_healthBar.GetMaxHealth();
-        }
-        else
-        {
-            Lives+=hp;
-        }
+        if (Lives + hp > m_healthBar.GetMaxHealth()) Lives=m_healthBar.GetMaxHealth();
+        else Lives+=hp;
+
         m_healthBar.ShowHealth(this);
         spriteRenderer.material = m_matHeal;
         Invoke("ResetHealMaterial", 0.2f);
@@ -187,7 +199,8 @@ public class Raptor : Entity
             experience = (int)(experience + exp) % (int)maxExperience;
             experienceBar.ShowUpdatePoints(updatePoints);
             level+= 1 + (int)(experience + exp) / (int)maxExperience;
-            PlayerPrefs.SetInt("levelRaptor", level);
+            data.level = level;
+            fileManager.SaveData(data);
         }
         else 
         {
@@ -204,38 +217,37 @@ public class Raptor : Entity
 
     public void ClickJumpButton()
     {
-        if (IsGrounded == true && RechargeTimeJump() == true)
-        {
-            IsJumped = true;
-        }
+        if (IsGrounded == true && RechargeTimeJump() == true) IsJumped = true;
     }
     public void ClickAttackButton()
     {
         AttackOneUnit();
     }
 
+
     public override void Die()
     {
+        PlaySound(2, volume, isDestroyed: true);
         Lives = 0;
         m_healthBar.ShowHealth(this);
         base.Die();
         m_diePanel.gameObject.SetActive(true);
     }
 
+    protected override void AttackOneUnit()
+    {
+        if (entitysForDamage.Count == 0 && timeBtwAttack <= 0) PlaySound(1, volume);
+        base.AttackOneUnit();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy" && collision.isTrigger == false)
-        {
-            entitysForDamage.Add(collision);
-        }
+        if (collision.gameObject.tag == "Enemy" && collision.isTrigger == false) entitysForDamage.Add(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag== "Enemy" && collision.isTrigger == false)
-        {
-            entitysForDamage.Remove(collision);
-        }
+        if (collision.gameObject.tag== "Enemy" && collision.isTrigger == false) entitysForDamage.Remove(collision);
     }
 
     void OnDrawGizmosSelected()

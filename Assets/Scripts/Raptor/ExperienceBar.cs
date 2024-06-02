@@ -27,8 +27,10 @@ public class ExperienceBar : MonoBehaviour
 
     public void Awake()
     {
-        upgradePoints =PlayerPrefs.GetInt("upgradePoints");
-        experience = PlayerPrefs.GetFloat("experience");
+        RaptorFileManager fileManager = new RaptorFileManager();
+        RaptorData data = fileManager.LoadData() as RaptorData;
+        upgradePoints =data.upgradePoints;
+        experience = data.experience;
         m_fill = 0f;
     }
 
@@ -72,8 +74,6 @@ public class ExperienceBar : MonoBehaviour
 
         m_fill = cycles>=2?m_fill+cycles:m_fill;
         cnt = 0;
-
-        Debug.Log($"{m_fill}");
     }
 
     public void ShowUpdatePoints(int up)
@@ -83,8 +83,11 @@ public class ExperienceBar : MonoBehaviour
 
     public void SaveExperience(int up,float exp)
     {
-        PlayerPrefs.SetInt("upgradePoints", up);
-        PlayerPrefs.SetFloat("experience", exp);
+        RaptorFileManager fileManager = new RaptorFileManager();
+        RaptorData data = fileManager.LoadData() as RaptorData;
+        data.upgradePoints=up;
+        data.experience= exp;
+        fileManager.SaveData(data);
     }
 
     public void UploadDataToRaptor(Raptor raptor)

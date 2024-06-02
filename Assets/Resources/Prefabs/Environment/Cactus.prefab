@@ -131,6 +131,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a12b1e1f0ea0a6e459fabed4f825d373, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mixerGroup: {fileID: 3329513382246773486, guid: cd75bfbf74e65c14aa33a874ef58de52, type: 2}
+  sounds: []
+  volume: 0.2
   enemies:
     serializedVersion: 2
     m_Bits: 192

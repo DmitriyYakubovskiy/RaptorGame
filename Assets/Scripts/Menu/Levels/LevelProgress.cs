@@ -9,17 +9,13 @@ public class LevelProgress : MonoBehaviour
 
     private void Awake()
     {
+        LevelsFileManager levelsFileManager = new LevelsFileManager();
+        LevelData data = levelsFileManager.LoadData() as LevelData;
+
         m_levels[0] = true;
         for (int i = 1; i < m_levels.Length; i++)
         {
-            if (PlayerPrefs.GetInt("level"+i.ToString()) == 1)
-            {
-                m_levels[i] = true;
-            }
-            else
-            {
-                m_levels[i] = false;
-            }
+            m_levels[i] = data.levels[i];
         }
     }
 

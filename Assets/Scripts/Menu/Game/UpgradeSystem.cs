@@ -21,49 +21,16 @@ public class UpgradeSystem : MonoBehaviour
 
     public void Awake()
     {
-        upgradePoints = PlayerPrefs.GetInt("upgradePoints");
-        level = PlayerPrefs.GetInt("levelRaptor");
-        if (level== 0)
-        {
-            level = 1;
-        }
-        if (PlayerPrefs.GetFloat("lives") >= 50 && PlayerPrefs.GetFloat("lives") <= 6000)
-        {
-            lives = PlayerPrefs.GetFloat("lives");
-        }
-        else
-        {
-            lives = 50;
-        }        
-        
-        if (PlayerPrefs.GetFloat("speed") >= 8 && PlayerPrefs.GetFloat("speed") <= 14)
-        {
-            speed = PlayerPrefs.GetFloat("speed");
-        }
-        else
-        {
-            speed = 8;
-        }
+        RaptorFileManager raptor=new RaptorFileManager();
+        RaptorData data = raptor.LoadData() as RaptorData;
 
-        if (PlayerPrefs.GetFloat("attack") >= 5 && PlayerPrefs.GetFloat("attack") <= 1001)
-        {
-            attack = PlayerPrefs.GetFloat("attack");
-        }
-        else
-        {
-            attack = 5;
-        }
+        upgradePoints = data.upgradePoints;
+        level = data.level;
+        lives = data.lives;      
+        speed = data.speed;
+        attack = data.attack;
+        knockback = data.knockback;
 
-        if (PlayerPrefs.GetInt("knockback") >= 15 && PlayerPrefs.GetInt("knockback") <= 1001)
-        {
-            knockback = PlayerPrefs.GetInt("knockback");
-        }
-        else
-        {
-            knockback = 15;
-        }
-
-        Save();
         ShowText();
     }
 
@@ -98,18 +65,17 @@ public class UpgradeSystem : MonoBehaviour
 
     public void ShowText()
     {
-        textLives.text = $"Lives: {lives}";
-        textAttack.text = $"Attack: {attack}";
-        textSpeed.text = $"Speed: {speed}";
-        textKnockback.text = $"Knockback: {knockback}";
-
-        textUpgradePoints.text = $"Upgrade Points: {upgradePoints}";
-        textLevel.text = $"Level: {level}";
+        textLives.text = $"{lives}";
+        textAttack.text = $"{attack}";
+        textSpeed.text = $"{speed}";
+        textKnockback.text = $"{knockback}";
+        textUpgradePoints.text = $"{upgradePoints}";
+        textLevel.text = $"{level}";
     }
 
     public void AddLives()
     {
-        if(upgradePoints > 0 && lives <5000)
+        if(upgradePoints > 0 && lives < 5000)
         {
             //lives = (int)(lives * 1.1f);
             lives += 10;
@@ -156,10 +122,16 @@ public class UpgradeSystem : MonoBehaviour
 
     public void Save()
     {
-        PlayerPrefs.SetFloat("lives", lives);
-        PlayerPrefs.SetFloat("attack", attack);
-        PlayerPrefs.SetFloat("speed", speed);
-        PlayerPrefs.SetInt("knockback", knockback);
-        PlayerPrefs.SetInt("upgradePoints", upgradePoints);
+        RaptorFileManager raptor = new RaptorFileManager();
+        RaptorData data = new RaptorData();
+
+        data.upgradePoints = upgradePoints;
+        data.level = level;
+        data.lives = lives;
+        data.speed = speed;
+        data.attack = attack;
+        data.knockback = knockback;
+
+        raptor.SaveData(data);
     }
 }

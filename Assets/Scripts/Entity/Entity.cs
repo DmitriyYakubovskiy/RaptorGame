@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity : MonoBehaviour
+public abstract class Entity : Sound
 {   
     [SerializeField] protected LayerMask enemies;
     [SerializeField] protected LayerMask ground;
@@ -99,6 +99,7 @@ public abstract class Entity : MonoBehaviour
         }
         else
         {
+            PlaySound(0, volume);
             Invoke("ResetDamageMaterial", 0.2f);
         }
     }
@@ -181,7 +182,7 @@ public abstract class Entity : MonoBehaviour
     //    }
     //}
 
-    protected void AttackOneUnit()
+    protected virtual void AttackOneUnit()
     {
         if (entitysForDamage.Count==0)
         {
@@ -198,6 +199,7 @@ public abstract class Entity : MonoBehaviour
                 entity.GetComponent<Entity>().StopMove(Knockback / 100 + 0.2f);
                 entity.GetComponent<Entity>().rigidbody.AddForce(new Vector2(Knockback * vector, Knockback), ForceMode2D.Impulse);
                 timeBtwAttack = startTimeBtwAttack;
+                PlaySound(1, volume);
             }
         }
     }
@@ -251,6 +253,7 @@ public abstract class Entity : MonoBehaviour
 
     public virtual void Die()
     {
+        PlaySound(2, volume, isDestroyed: true);
         GameObject explosionRef = (GameObject)Instantiate(explosion);
         explosionRef.GetComponent<Transform>().localScale = new(SmookeSize, SmookeSize, 0);
         explosionRef.transform.position = new Vector3(spriteRenderer.GetComponent<Transform>().position.x, spriteRenderer.GetComponent<Transform>().position.y, 0);

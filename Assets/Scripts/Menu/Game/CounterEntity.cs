@@ -59,7 +59,7 @@ public class CounterEntity : MonoBehaviour
         if (isUpdate == true)
         {
             isUpdate = false;
-            m_Text.text = $"Total creatures: {m_countEntity}" + $"\nAgressive creatures: {m_countAgressiveEntity}";
+            m_Text.text = $"{m_countEntity}" + $"\n{m_countAgressiveEntity}";
         }
     }
 }

@@ -10,7 +10,9 @@ public class ShowFps : MonoBehaviour
 
     private void Awake()
     {
-        if (PlayerPrefs.GetInt("ShowFps") == 1)
+        SettingsFileManager manager = new SettingsFileManager();
+        SettingsData data = manager.LoadData() as SettingsData;
+        if (data.fpsIsOn==true)
         {
             m_fpsText.gameObject.SetActive(true);
         }
@@ -27,7 +29,9 @@ public class ShowFps : MonoBehaviour
 
     private void Fps()
     {
-        if (PlayerPrefs.GetInt("ShowFps") == 1)
+        SettingsFileManager manager = new SettingsFileManager();
+        SettingsData data = manager.LoadData() as SettingsData;
+        if (data.fpsIsOn == true)
         {
             m_time += Time.deltaTime;
             m_frameCount++;
