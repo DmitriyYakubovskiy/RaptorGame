@@ -194,7 +194,7 @@ namespace YG
 
         public void SceneButton(int index)
         {
-            SceneManager.LoadScene(index);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(index);
         }
 
         public void NewNameLB()

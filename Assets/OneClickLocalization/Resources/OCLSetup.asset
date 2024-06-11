@@ -138,6 +138,9 @@ MonoBehaviour:
   - 'Audio:'
   - Zoom
   - Endless mode
+  - Lives
+  - 'Lives: '
+  - Buy
   _values:
   - "\u041D\u0430\u0439\u0441\u0442\u0440\u043E\u0439\u043A\u0438"
   - "\u0410\u0442\u0430\u0442\u043A\u0430"
@@ -168,6 +171,9 @@ MonoBehaviour:
   - "\u0410\u0443\u0434\u0438\u043E:"
   - "\u041F\u0440\u0438\u0431\u043B\u0438\u0437."
   - "\u0411\u0435\u0441\u043A\u043E\u043D\u0435\u0447\u043D\u044B\u0439 \u0440\u0435\u0436\u0438\u043C"
+  - "\u0416\u0438\u0437\u043D\u0438"
+  - "\u0416\u0438\u0437\u043D\u0438: "
+  - "\u041A\u0443\u043F\u0438\u0442\u044C"
 --- !u!114 &-2109056002340881285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,7 +367,27 @@ MonoBehaviour:
   - +
   - 00
   - Endless mode
+  - '0
+
+    0'
+  - 0
+  - 'FPS: 00'
+  - Option A
+  - Sample
+  - Seems to be ok!
+  - Hello World!
+  - Lives
+  - 'Lives: '
   _values:
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
+  - '[NULL VALUE OCL]'
   - '[NULL VALUE OCL]'
   - '[NULL VALUE OCL]'
   - '[NULL VALUE OCL]'

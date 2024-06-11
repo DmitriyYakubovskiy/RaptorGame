@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4844567086866606773}
   - component: {fileID: 4844567086866606770}
   m_Layer: 0
-  m_Name: Portal
+  m_Name: SpritePortal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -439,9 +439,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4060696ba9e18b40be6b2c1b503e62a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_greenLine: {fileID: 4844567088291198573}
-  m_processBar: {fileID: 4844567087078502341}
-  m_panel: {fileID: 0}
+  greenLine: {fileID: 4844567088291198573}
+  processBar: {fileID: 4844567087078502341}
 --- !u!70 &4844567088324816745
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

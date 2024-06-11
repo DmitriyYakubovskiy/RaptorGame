@@ -65,12 +65,12 @@ namespace YG
         private void OnEnable()
         {
             if (singleton)
-                SceneManager.sceneLoaded += OnSceneLoaded;
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         }
         private void OnDisable()
         {
             if (singleton)
-                SceneManager.sceneLoaded -= OnSceneLoaded;
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         private void Awake()

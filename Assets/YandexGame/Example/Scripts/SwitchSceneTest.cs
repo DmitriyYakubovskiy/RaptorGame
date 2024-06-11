@@ -7,7 +7,7 @@ namespace YG.Example
     {
         public void SwitchScene(int sceneID)
         {
-            SceneManager.LoadScene(sceneID);
+            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneID);
         }
     }
 }

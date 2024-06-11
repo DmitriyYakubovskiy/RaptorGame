@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4303727992259691317}
   - component: {fileID: 4303727992259691314}
   - component: {fileID: 4303727992259691315}
-  - component: {fileID: 4303727992259691316}
   m_Layer: 5
   m_Name: Red
   m_TagString: Untagged
@@ -32,7 +31,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4303727992268733024}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -77,20 +75,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 10
---- !u!114 &4303727992259691316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4303727992259691318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82c3b2d40e57dce45be1f9793749aa1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_redLine: {fileID: 4303727992259691317}
-  m_HealthBar: {fileID: 4303727992268733025}
 --- !u!1 &4303727992268733025
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,6 +84,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4303727992268733024}
+  - component: {fileID: 8579473137869512909}
   m_Layer: 5
   m_Name: HpBar
   m_TagString: Untagged
@@ -123,13 +108,26 @@ RectTransform:
   - {fileID: 4303727993606156633}
   - {fileID: 4303727992259691317}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 149.20032, y: -62.200012}
   m_SizeDelta: {x: 180, y: 35}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8579473137869512909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4303727992268733025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82c3b2d40e57dce45be1f9793749aa1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_redLine: {fileID: 4303727992259691317}
+  m_HealthBar: {fileID: 4303727992268733025}
 --- !u!1 &4303727993606156634
 GameObject:
   m_ObjectHideFlags: 0
@@ -161,7 +159,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4303727992268733024}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -237,7 +234,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4303727992268733024}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}

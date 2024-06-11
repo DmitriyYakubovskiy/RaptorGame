@@ -41,6 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6271652111380682525}
   - component: {fileID: 6271652111186704790}
+  - component: {fileID: 1495790450755876869}
+  - component: {fileID: 7347097983862437572}
   - component: {fileID: 6271652111380682524}
   - component: {fileID: 6271652111186704788}
   - component: {fileID: 6271652111186704791}
@@ -97,6 +99,30 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &1495790450755876869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6271652111186704789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 641e22e8516671443b50dc62f4ffe744, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7347097983862437572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6271652111186704789}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df853d740ae6b94ea8d9477cd28fa9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6271652111380682524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,10 +150,6 @@ MonoBehaviour:
     m_Bits: 448
   attackRange: 0.54
   entitysForDamage: []
-  m_healthBar: {fileID: 0}
-  m_fixedJoystick: {fileID: 0}
-  m_diePanel: {fileID: 0}
-  experienceBar: {fileID: 0}
 --- !u!70 &6271652111186704788
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

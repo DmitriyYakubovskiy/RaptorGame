@@ -200,6 +200,15 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 448
   attackRange: 0.54
+  radiusCheckGround: 0.27
+  lives: 150
+  speed: 7
+  jumpForce: 100
+  damage: 10
+  knockback: 30
+  smokeSize: 1.8
+  startTimeBtwAttack: 1
+  StartTimeBtwJump: 0.5
   entitysForDamage: []
   m_MaskWall:
     serializedVersion: 2
@@ -207,6 +216,12 @@ MonoBehaviour:
   m_MaskEndMap:
     serializedVersion: 2
     m_Bits: 512
+  sizeCheckingWall: {x: 0.4, y: 0.09}
+  timeStartCheckPlayer: 0.1
+  beginCheckPlayer: 1.5
+  endCheckPlayer: 20
+  checkPlayerY: 8
+  experience: 200
 --- !u!70 &3369232062425761872
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
